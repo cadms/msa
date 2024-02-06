@@ -9,7 +9,7 @@ const FilterMenu = MenuBuilder.extend({
 
   render: function() {
     this.setName("Filter");
-    this.addNode("Hide columns by threshold",(e) => {
+    this.addNode("Hide columns by conserv threshold",(e) => {
       let threshold = prompt("Enter threshold (in percent)", 20);
       threshold = threshold / 100;
       const maxLen = this.model.getMaxLength();
