@@ -14,6 +14,23 @@ const SelectionMenu = MenuBuilder.extend({
       return this.g.user.set("searchText", search);
     });
 
+    this.addNode("Edit", () => {
+      const t = this
+      const selcol = t.g.selcol
+      const firstSel = selcol.models[0]
+      const row = firstSel.get('seqId')
+      const col = firstSel.get('xStart')
+      const seq = t.g.stats.seqs[row]
+      const char = seq.substr(col, 1)
+      const type = firstSel.get('type')
+
+      if (type === 'pos') {
+        Ext.GlobalEvents.fireEvent('msa_edit', char, row, col);
+      } else {
+        Ext.GlobalEvents.fireEvent('msa_edit', seq, row)
+      }
+    });
+
     this.addNode("Invert columns", () => {
       return this.g.selcol.invertCol(((() => {
         const result = [];
