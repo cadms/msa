@@ -25,7 +25,7 @@ const SelectionMenu = MenuBuilder.extend({
       const type = firstSel.get('type')
 
       if (type === 'pos') {
-        Ext.GlobalEvents.fireEvent('msa_edit', char, row, col);
+        Ext.GlobalEvents.fireEvent('msa_edit', char, row, col)
       } else {
         Ext.GlobalEvents.fireEvent('msa_edit', seq, row)
       }
@@ -52,7 +52,13 @@ const SelectionMenu = MenuBuilder.extend({
       return this.g.selcol.invertRow(this.model.pluck("id"));
     });
     this.addNode("Reset", () => {
-      return this.g.selcol.reset();
+      const t = this
+      const selcol = t.g.selcol
+      const firstSel = selcol.models[0]
+      const row = firstSel.get('seqId')
+      const oldSeq = t.g.stats.mseqs.at(row).previous('seq')
+      
+      return t.g.stats.mseqs.at(row).set('seq', oldSeq)
     });
     this.el.appendChild(this.buildDOM());
     return this;
