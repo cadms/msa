@@ -57,7 +57,7 @@ const SelectionMenu = MenuBuilder.extend({
       const firstSel = selcol.models[0]
       const row = firstSel.get('seqId')
       const oldSeq = t.g.stats.mseqs.at(row).previous('seq')
-      
+
       return t.g.stats.mseqs.at(row).set('seq', oldSeq)
     });
     this.el.appendChild(this.buildDOM());

@@ -42,7 +42,7 @@ const View = boneView.extend({
 
   updateResult: function() {
       var text = "search pattern: " + this.g.user.get("searchText");
-      text += ", selection: " + (this.selPos + 1);
+      text += ", selection: " + (this.selPos + 1) + " of " + this.sel.length;
       var seli = this.sel[this.selPos];
       text += " (";
       text += seli.get("xStart") + " - " + seli.get("xEnd");
@@ -92,7 +92,9 @@ const View = boneView.extend({
   focus: function(selPos) {
     var seli = this.sel[selPos];
     var leftIndex = seli.get("xStart");
+    var rowIndex = seli.get("seqId");
     this.g.zoomer.setLeftOffset(leftIndex);
+    this.g.zoomer.setTopOffset(rowIndex - 1);
     return this.g.selcol.reset([seli]);
   },
 
