@@ -9,6 +9,12 @@ const FilterMenu = MenuBuilder.extend({
 
   render: function() {
     this.setName("Filter");
+
+    this.addNode("Find Motif (supports RegEx)", () => {
+      var search = prompt("your search", "D");
+      return this.g.user.set("searchText", search);
+    });
+
     this.addNode("Hide columns by conserv threshold",(e) => {
       let threshold = prompt("Enter threshold (in percent)", 20);
       threshold = threshold / 100;

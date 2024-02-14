@@ -9,10 +9,6 @@ const SelectionMenu = MenuBuilder.extend({
 
   render() {
     this.setName("Selection");
-    this.addNode("Find Motif (supports RegEx)", () => {
-      var search = prompt("your search", "D");
-      return this.g.user.set("searchText", search);
-    });
 
     this.addNode("Edit", () => {
       const t = this
