@@ -46,7 +46,7 @@ const View = boneView.extend({
       var seli = this.sel[this.selPos];
       text += " (";
       text += seli.get("xStart") + " - " + seli.get("xEnd");
-      text += ", id: " + seli.get("seqId");
+      text += ", id: " + (parseInt(seli.get("seqId")) + 1).toString();
       text += ")";
       return this.resultBox.textContent = text;
   },
