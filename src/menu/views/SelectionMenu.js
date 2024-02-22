@@ -27,26 +27,26 @@ const SelectionMenu = MenuBuilder.extend({
       }
     });
 
-    this.addNode("Invert columns", () => {
-      return this.g.selcol.invertCol(((() => {
-        const result = [];
-        const end = this.model.getMaxLength();
-        let i = 0;
-        if (0 <= end) {
-          while (i <= end) {
-            result.push(i++);
-          }
-        } else {
-          while (i >= end) {
-            result.push(i--);
-          }
-        }
-        return result;
-      })()));
-    });
-    this.addNode("Invert rows", () => {
-      return this.g.selcol.invertRow(this.model.pluck("id"));
-    });
+    // this.addNode("Invert columns", () => {
+    //   return this.g.selcol.invertCol(((() => {
+    //     const result = [];
+    //     const end = this.model.getMaxLength();
+    //     let i = 0;
+    //     if (0 <= end) {
+    //       while (i <= end) {
+    //         result.push(i++);
+    //       }
+    //     } else {
+    //       while (i >= end) {
+    //         result.push(i--);
+    //       }
+    //     }
+    //     return result;
+    //   })()));
+    // });
+    // this.addNode("Invert rows", () => {
+    //   return this.g.selcol.invertRow(this.model.pluck("id"));
+    // });
     this.addNode("Reset", () => {
       const t = this
       const selcol = t.g.selcol
