@@ -117,7 +117,7 @@ const ConservationView = view.extend({
       rect.style.stroke = strokeColorer(d);
       rect.style.fill = fillColorer(d);
 
-      title.textContent = `${d.y}`;
+      title.textContent = conserv[n];
 
       if (typeof rectStyler === 'function') {
         rectStyler( rect, d );
