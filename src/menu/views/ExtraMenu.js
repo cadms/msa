@@ -20,7 +20,7 @@ const ExtraMenu = MenuBuilder.extend({
       var seq = new Seq({
         seq: con,
         id: "0c",
-        name: "Consenus"
+        name: "Consensus"
       });
       this.model.add(seq);
       this.model.setRef(seq);
@@ -59,10 +59,10 @@ const ExtraMenu = MenuBuilder.extend({
     this.addNode("Jump to a column", () => {
       var offset = prompt("Column", "20");
       if (offset < 0 || offset > this.model.getMaxLength() || isNaN(offset)) {
-        alert("invalid column");
+        Ext.Msg.alert("Invalid Column", `Please enter a numeric value between 1 and ${this.model.getMaxLength()}.`);
         return;
       }
-      return this.g.zoomer.setLeftOffset(offset);
+      return this.g.zoomer.setLeftOffset(offset - 1);
     });
 
     this.el.appendChild(this.buildDOM());
