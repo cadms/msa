@@ -27,6 +27,16 @@ const SelectionMenu = MenuBuilder.extend({
       }
     });
 
+    this.addNode("Rename", () => {
+      const t = this
+      const selcol = t.g.selcol
+      const firstSel = selcol.models[0]
+      const row = firstSel.get('seqId')
+
+      return t.g.stats.mseqs.at(row).set('name', 'xyz')
+      debugger
+    });
+
     // this.addNode("Invert columns", () => {
     //   return this.g.selcol.invertCol(((() => {
     //     const result = [];
