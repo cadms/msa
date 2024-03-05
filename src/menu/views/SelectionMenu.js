@@ -41,12 +41,10 @@ const SelectionMenu = MenuBuilder.extend({
         buttons: Ext.Msg.OKCANCEL,
         scope: this,
         fn: function(btnText, val) {
+          if (btnText !== 'ok' || val === '' || val === seqLabel) return
           t.g.stats.mseqs.at(row).set('name', val)
         }
       });
-
-      // return t.g.stats.mseqs.at(row).set('name', 'xyz')
-      // debugger
     });
 
     // this.addNode("Invert columns", () => {
