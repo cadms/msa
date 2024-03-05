@@ -32,9 +32,21 @@ const SelectionMenu = MenuBuilder.extend({
       const selcol = t.g.selcol
       const firstSel = selcol.models[0]
       const row = firstSel.get('seqId')
+      const seqLabel = t.g.stats.mseqs.at(row).get('name')
 
-      return t.g.stats.mseqs.at(row).set('name', 'xyz')
-      debugger
+      Ext.Msg.show({
+        title: 'Rename Label',
+        prompt: true,
+        value: seqLabel,
+        buttons: Ext.Msg.OKCANCEL,
+        scope: this,
+        fn: function(btnText, val) {
+          t.g.stats.mseqs.at(row).set('name', val)
+        }
+      });
+
+      // return t.g.stats.mseqs.at(row).set('name', 'xyz')
+      // debugger
     });
 
     // this.addNode("Invert columns", () => {
