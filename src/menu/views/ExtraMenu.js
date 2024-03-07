@@ -13,22 +13,30 @@ const ExtraMenu = MenuBuilder.extend({
 
   render: function() {
     this.setName("Extras");
-    var stats = this.g.stats;
-    var msa = this.msa;
-    this.addNode("Add consensus seq", () => {
-      var con = stats.consensus();
-      var seq = new Seq({
-        seq: con,
-        id: "0c",
-        name: "Consensus"
-      });
-      this.model.add(seq);
-      this.model.setRef(seq);
-      this.model.comparator = function(seq) {
-        return !seq.get("ref");
-      };
-      return this.model.sort();
-    });
+    // var stats = this.g.stats;
+    // var msa = this.msa;
+    // this.addNode("Add consensus seq", () => {
+    //   var con = stats.consensus();
+    //   var seq = new Seq({
+    //     seq: con,
+    //     id: 0,
+    //     name: "Consensus"
+    //   });
+  
+      // TODO: find a better way, removing for now
+
+      // have to increment each seq id by 1 so "rename" and "edit" offsets are correct
+      // this works but has to redraw all columns (takes a while)
+    //   stats.mseqs.forEach((m, i) => m.set('id', i + 1)) 
+    
+    //   this.model.add(seq);
+    //   this.model.setRef(seq);
+    //   this.model.comparator = function(seq) {
+    //     return !seq.get("ref");
+    //   };
+
+    //   return this.model.sort();
+    // });
 
     // @addNode "Calc Tree", ->
     //   # this is a very experimental feature
@@ -58,7 +66,7 @@ const ExtraMenu = MenuBuilder.extend({
 
     this.addNode("Jump to a column", () => {
       var offset = prompt("Column", "20");
-      if (offset < 0 || offset > this.model.getMaxLength() || isNaN(offset)) {
+      if (offset <= 0 || offset > this.model.getMaxLength() || isNaN(offset)) {
         Ext.Msg.alert("Invalid Column", `Please enter a numeric value between 1 and ${this.model.getMaxLength()}.`);
         return;
       }
