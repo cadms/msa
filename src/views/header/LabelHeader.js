@@ -74,9 +74,12 @@ const LabelHeader = view.extend({
     var metaHeader = k.mk("div");
     metaHeader.style.width = this.g.zoomer.getMetaWidth();
     metaHeader.style.display = "inline-block";
-
+    
     if (this.g.vis.get("metaGaps")) {
       metaHeader.appendChild(this.addEl("Gaps", this.g.zoomer.get('metaGapWidth')));
+      // TODO:
+      // circle back to this
+      metaHeader.style.paddingLeft = `${this.g.zoomer.get('metaGapWidth') + 2}px`
     }
     if (this.g.vis.get("metaIdentity")) {
       metaHeader.appendChild(this.addEl("Ident", this.g.zoomer.get('metaIdentWidth')));

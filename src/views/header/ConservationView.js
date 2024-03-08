@@ -16,7 +16,7 @@ const ConservationView = view.extend({
     this.listenTo(this.g.stats,"reset", this.render);
 
     var opts = _.extend( {}, {
-      fillColor: ['#660', '#ff0'],
+      fillColor: ['#4682B4', '#ff0'],
       strokeColor: '#330',
       maxHeight: 20,
       rectStyler: function(rect, data) { return rect }
@@ -67,7 +67,7 @@ const ConservationView = view.extend({
 
   render: function() {
     var conserv = this.g.stats.scale(this.g.stats.conservation());
-
+    
     dom.removeAllChilds(this.el);
 
     var nMax = this.model.getMaxLength();
@@ -77,7 +77,7 @@ const ConservationView = view.extend({
 
     var s = svg.base({height: maxHeight, width: width});
     s.style.display = "inline-block";
-    s.style.cursor = "pointer";
+    // s.style.cursor = "pointer";
 
     var rectData = this.rectData;
     var fillColorer = this.colorer( this.fillColor );
@@ -110,18 +110,23 @@ const ConservationView = view.extend({
         rowPos: n,
       };
 
-      var rect = svg.rect( d );
+      var rect = svg.rect(d);
+      // tooltip for conserv weights
+      var title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
 
       rect.style.stroke = strokeColorer(d);
       rect.style.fill = fillColorer(d);
 
-      if ( typeof rectStyler === 'function' ) {
+      title.textContent = conserv[n];
+
+      if (typeof rectStyler === 'function') {
         rectStyler( rect, d );
       }
 
       rect.rowPos = n;
 
       s.appendChild(rect);
+      rect.appendChild(title);
       x += width;
       n += stepSize;
     }

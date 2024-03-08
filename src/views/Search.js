@@ -42,11 +42,11 @@ const View = boneView.extend({
 
   updateResult: function() {
       var text = "search pattern: " + this.g.user.get("searchText");
-      text += ", selection: " + (this.selPos + 1);
+      text += ", selection: " + (this.selPos + 1) + " of " + this.sel.length;
       var seli = this.sel[this.selPos];
       text += " (";
-      text += seli.get("xStart") + " - " + seli.get("xEnd");
-      text += ", id: " + seli.get("seqId");
+      text += "col(s): " + (parseInt(seli.get("xStart")) + 1).toString() + " - " + (parseInt(seli.get("xEnd")) + 1).toString();
+      text += ", id: " + (parseInt(seli.get("seqId")) + 1).toString();
       text += ")";
       return this.resultBox.textContent = text;
   },
@@ -92,7 +92,9 @@ const View = boneView.extend({
   focus: function(selPos) {
     var seli = this.sel[selPos];
     var leftIndex = seli.get("xStart");
+    var rowIndex = seli.get("seqId");
     this.g.zoomer.setLeftOffset(leftIndex);
+    this.g.zoomer.setTopOffset(rowIndex - 1);
     return this.g.selcol.reset([seli]);
   },
 
@@ -113,7 +115,9 @@ const View = boneView.extend({
           var args = {xStart: index, xEnd: index + match[0].length - 1, seqId:
             seq.get("id")};
           newSeli.push(new possel(args));
-          result.push(leftestIndex = Math.min(index, leftestIndex));
+          // this is for setting the offset when the user first clicks search
+          // all other match offsets are calculated via focus() 
+          result.push(leftestIndex = newSeli.at(0).get('xStart'));
         }
         return result;
       })();
@@ -124,6 +128,7 @@ const View = boneView.extend({
     // safety check + update offset
     if (leftestIndex === origIndex) { leftestIndex = 0; }
     this.g.zoomer.setLeftOffset(leftestIndex);
+    this.g.zoomer.setTopOffset(this.g.selcol.at(0).get('seqId'))
 
     return this.sel = newSeli;
   }
