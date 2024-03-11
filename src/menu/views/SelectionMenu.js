@@ -16,7 +16,7 @@ const SelectionMenu = MenuBuilder.extend({
       const firstSel = selcol.models[0]
       const row = firstSel.get('seqId')
       const col = firstSel.get('xStart')
-      const seq = t.g.stats.seqs[row]
+      const seq = t.model.at(row).get('seq')
       const char = seq.substr(col, 1)
       const type = firstSel.get('type')
 
@@ -32,7 +32,7 @@ const SelectionMenu = MenuBuilder.extend({
       const selcol = t.g.selcol
       const firstSel = selcol.models[0]
       const row = firstSel.get('seqId')
-      const seqLabel = t.g.stats.mseqs.at(row).get('name')
+      const seqLabel = t.model.at(row).get('name')
 
       Ext.Msg.show({
         title: 'Rename Label',
@@ -42,7 +42,7 @@ const SelectionMenu = MenuBuilder.extend({
         scope: this,
         fn: function(btnText, val) {
           if (btnText !== 'ok' || val === '' || val === seqLabel) return
-          t.g.stats.mseqs.at(row).set('name', val)
+          t.model.at(row).set('name', val)
         }
       });
     });
@@ -72,9 +72,9 @@ const SelectionMenu = MenuBuilder.extend({
       const selcol = t.g.selcol
       const firstSel = selcol.models[0]
       const row = firstSel.get('seqId')
-      const oldSeq = t.g.stats.mseqs.at(row).previous('seq')
+      const oldSeq = t.model.at(row).previous('seq')
 
-      return t.g.stats.mseqs.at(row).set('seq', oldSeq)
+      return t.model.at(row).set('seq', oldSeq)
     });
     this.el.appendChild(this.buildDOM());
     return this;
