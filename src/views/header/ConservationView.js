@@ -99,7 +99,7 @@ const ConservationView = view.extend({
       for (var i = 0; 0 < end ? i <= end : i >= end; 0 < end ? i++ : i--) {
         avgHeight += conserv[n];
       }
-      var height = maxHeight *  (avgHeight / stepSize);
+      var height = maxHeight * (avgHeight / stepSize);
 
       var d = {
         x: x,
