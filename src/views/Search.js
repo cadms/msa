@@ -128,7 +128,11 @@ const View = boneView.extend({
     // safety check + update offset
     if (leftestIndex === origIndex) { leftestIndex = 0; }
     this.g.zoomer.setLeftOffset(leftestIndex);
-    this.g.zoomer.setTopOffset(this.g.selcol.at(0).get('seqId'))
+    if (newSeli.length) {
+      this.g.zoomer.setTopOffset(newSeli.at(0).get('seqId'))
+    } else {
+      this.g.zoomer.setTopOffset(0)
+    }
 
     return this.sel = newSeli;
   }

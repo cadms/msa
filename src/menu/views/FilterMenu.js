@@ -83,6 +83,9 @@ const FilterMenu = MenuBuilder.extend({
     this.addNode("Hide seqs by identity", () => {
       let threshold = prompt("Enter threshold (in percent)", 20);
       threshold = threshold / 100;
+      // const identityArr = this.g.stats.identity()
+      // const filtered = this.model.filter(el => identityArr[el.id] < threshold) 
+      // return this.model.remove(filtered)
       return this.model.each((el) => {
         if (this.g.stats.identity()[el.id] < threshold) {
             return el.set('hidden', true);
@@ -114,6 +117,7 @@ const FilterMenu = MenuBuilder.extend({
 
     this.addNode("Reset", () => {
       this.g.columns.set("hidden", []);
+      this.g.user.set("searchText", null)
       return this.model.each((el) => {
         if (el.get('hidden')) {
           return el.set('hidden', false);
