@@ -45,21 +45,34 @@ const SelectionMenu = MenuBuilder.extend({
         buttons: Ext.Msg.OKCANCEL,
         scope: this,
         fn: function(btnText, val) {
+
+          // check if the user has clicked on positions that are not in the same seq/row
+          function checkSeqId(arr) {
+            const uniqueSeqIds = new Set()
+            for (const obj of arr) {
+              uniqueSeqIds.add(obj.get('seqId'))
+            }
+            return uniqueSeqIds.size > 1
+          }
+
           if (btnText !== 'ok' || val === '' || val === oldVal) return
+
           if (val.length > oldVal.length || val.length < oldVal.length) {
-            Ext.Msg.alert('Invalid Character Length', `Please enter a replacement value of the same length.`);
+            Ext.Msg.alert('Invalid Character Length', 'Please enter a replacement value of the same length.')
             return
           }
+
+          if (checkSeqId(selcol.models)) {
+            Ext.Msg.alert('Invalid Selection', 'Please select values that are of the same sequence.')
+            return
+          }
+
           seq = `${seq.substring(0, startCol)}${val}${seq.substring(endCol + 1)}`
           t.model.at(row).set('seq', seq)
-          // console.log(startCol, endCol)
-          // debugger
           
         }
       });
 
-
-      // debugger
     });
 
     this.addNode("Rename", () => {
