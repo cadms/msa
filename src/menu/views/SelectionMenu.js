@@ -27,6 +27,41 @@ const SelectionMenu = MenuBuilder.extend({
       }
     });
 
+    this.addNode("Edit by seq position", () => {
+      const t = this
+      const selcol = t.g.selcol
+      const firstSel = selcol.models[0]
+      const row = firstSel.get('seqId')
+      let seq = t.model.at(row).get('seq')
+      const selRange = selcol.models.map(m => m.get('xStart'))
+      const startCol = Math.min(...selRange)
+      const endCol = Math.max(...selRange)
+      const oldVal = seq.substring(startCol, endCol + 1) // selected chars
+
+      Ext.Msg.show({
+        title: 'Edit',
+        prompt: true,
+        value: oldVal,
+        buttons: Ext.Msg.OKCANCEL,
+        scope: this,
+        fn: function(btnText, val) {
+          if (btnText !== 'ok' || val === '' || val === oldVal) return
+          if (val.length > oldVal.length || val.length < oldVal.length) {
+            Ext.Msg.alert('Invalid Character Length', `Please enter a replacement value of the same length.`);
+            return
+          }
+          seq = `${seq.substring(0, startCol)}${val}${seq.substring(endCol + 1)}`
+          t.model.at(row).set('seq', seq)
+          // console.log(startCol, endCol)
+          // debugger
+          
+        }
+      });
+
+
+      // debugger
+    });
+
     this.addNode("Rename", () => {
       const t = this
       const selcol = t.g.selcol
