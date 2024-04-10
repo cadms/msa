@@ -11,8 +11,29 @@ const FilterMenu = MenuBuilder.extend({
     this.setName("Filter");
 
     this.addNode("Find Motif (supports RegEx)", () => {
-      var search = prompt("your search", "D");
+      let search = prompt("your search", "D");
       return this.g.user.set("searchText", search);
+    });
+
+    this.addNode("Find by label", () => {
+      const prompt = Ext.Msg.show({
+        title: 'Jump to a Label',
+        prompt: true,
+        buttons: Ext.Msg.OKCANCEL,
+        scope: this,
+        fn: function(btnText, val) {
+          if (btnText !== 'ok' || val === '') return
+          this.model.forEach(m => {
+            if (m.get('name') === val) {
+              this.g.zoomer.setTopOffset(m.get('id'))
+            }
+          })
+        }
+      });
+
+      const inputEl = prompt.getEl().query('input')[0]
+      inputEl.setAttribute('placeholder', 'Enter a label name...')
+
     });
 
     this.addNode("Hide columns by conserv threshold",(e) => {
@@ -62,9 +83,12 @@ const FilterMenu = MenuBuilder.extend({
     this.addNode("Hide seqs by identity", () => {
       let threshold = prompt("Enter threshold (in percent)", 20);
       threshold = threshold / 100;
+      // const identityArr = this.g.stats.identity()
+      // const filtered = this.model.filter(el => identityArr[el.id] < threshold) 
+      // return this.model.remove(filtered)
       return this.model.each((el) => {
-    	if (this.g.stats.identity()[el.id] < threshold) {
-          return el.set('hidden', true);
+        if (this.g.stats.identity()[el.id] < threshold) {
+            return el.set('hidden', true);
         }
       });
     });
@@ -93,6 +117,7 @@ const FilterMenu = MenuBuilder.extend({
 
     this.addNode("Reset", () => {
       this.g.columns.set("hidden", []);
+      this.g.user.set("searchText", null)
       return this.model.each((el) => {
         if (el.get('hidden')) {
           return el.set('hidden', false);

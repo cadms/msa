@@ -29,7 +29,7 @@ const ConservationView = view.extend({
 
     var s = svg.base({height: maxHeight, width: width});
     s.style.display = "inline-block";
-    s.style.cursor = "pointer";
+    // s.style.cursor = "pointer";
 
     var stepSize = this.g.zoomer.get("stepSize");
     var hidden = this.g.columns.get("hidden");
@@ -48,10 +48,20 @@ const ConservationView = view.extend({
       }
       var height = maxHeight *  (avgHeight / stepSize);
 
-      var rect =  svg.rect({x:x,y: maxHeight - height,width:width - cellWidth / 4,height:height,style:
-        "stroke:red;stroke-width:1;"
-      });rect.rowPos = n;
+      var rect = svg.rect({
+        x: x,
+        y: maxHeight - height,
+        width: width - cellWidth / 4,
+        height: height,
+        rowPos: n,
+        style: "stroke:red;stroke-width:1;"
+      });
+
+      var title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = gaps[n];
+      
       s.appendChild(rect);
+      rect.appendChild(title);
       x += width;
       n += stepSize;
     }
