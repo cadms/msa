@@ -1,5 +1,4 @@
 import MenuBuilder from "../menubuilder";
-
 const SelectionMenu = MenuBuilder.extend({
 
   initialize(data) {
@@ -73,6 +72,14 @@ const SelectionMenu = MenuBuilder.extend({
         }
       });
 
+    });
+
+    this.addNode("Remove selected seq", () => {
+      const t = this
+      const selcol = t.g.selcol
+      const firstSel = selcol.models[0]
+      const row = firstSel.get('seqId')
+      t.model.remove(row)
     });
 
     this.addNode("Rename", () => {
