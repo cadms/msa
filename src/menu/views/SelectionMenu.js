@@ -3,6 +3,7 @@ const SelectionMenu = MenuBuilder.extend({
 
   initialize(data) {
     this.g = data.g;
+    this.removed_arr = []
     return this.el.style.display = "inline-block";
   },
 
@@ -79,7 +80,10 @@ const SelectionMenu = MenuBuilder.extend({
       const selcol = t.g.selcol
       const firstSel = selcol.models[0]
       const row = firstSel.get('seqId')
-      t.model.remove(row)
+      const removed = t.model.at(row).set('hidden', true)
+
+      this.removed_arr.push(removed)
+      
     });
 
     this.addNode("Rename", () => {
@@ -129,7 +133,9 @@ const SelectionMenu = MenuBuilder.extend({
       const row = firstSel.get('seqId')
       const oldSeq = t.model.at(row).previous('seq')
 
-      return t.model.at(row).set('seq', oldSeq)
+      t.model.at(row).set('seq', oldSeq)
+      this.removed_arr.forEach(el => el.set('hidden', false))
+      this.removed_arr = []
     });
     this.el.appendChild(this.buildDOM());
     return this;
