@@ -6,9 +6,11 @@ const ColorMenu = MenuBuilder.extend({
   initialize: function(data) {
     this.g = data.g;
     this.el.style.display = "inline-block";
+    
     return this.listenTo(this.g.colorscheme, "change", function() {
       return this.render();
     });
+    
   },
 
   render: function() {
@@ -53,6 +55,7 @@ const ColorMenu = MenuBuilder.extend({
   },
 
   getColorschemes: function() {
+    
     var schemes  = [];
     schemes.push({name: "Taylor", id: "taylor"});
     schemes.push({name: "Buried", id: "buried"});
@@ -69,6 +72,7 @@ const ColorMenu = MenuBuilder.extend({
     schemes.push({name: "Strand", id: "strand"});
     schemes.push({name: "Turn", id: "turn"});
     schemes.push({name: "Zappo", id: "zappo"});
+    schemes.push({name: "Mismatch", id: "mismatch"});
     schemes.push({name: "No color", id: "foo"});
     return schemes;
   },

@@ -8,7 +8,7 @@ var Model = require("backbone-thin").Model;
 module.exports = Colorscheme = Model.extend({
 
   defaults: {
-    scheme: "taylor", // name of your color scheme
+    scheme: "mismatch", // name of your color scheme
     colorBackground: true, // otherwise only the text will be colored
     showLowerCase: true, // used to hide and show lowercase chars in the overviewbox
     opacity: 0.6, // opacity for the residues
