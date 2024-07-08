@@ -8,7 +8,7 @@ var Model = require("backbone-thin").Model;
 module.exports = Colorscheme = Model.extend({
 
   defaults: {
-    scheme: "taylor", // name of your color scheme
+    scheme: "mismatch", // name of your color scheme
     colorBackground: true, // otherwise only the text will be colored
     showLowerCase: true, // used to hide and show lowercase chars in the overviewbox
     opacity: 0.6, // opacity for the residues
@@ -26,7 +26,10 @@ module.exports = Colorscheme = Model.extend({
       // some dynamic modules might require a redraw
       if (this.getSelectedScheme().type === "dyn") {
         var ref;
-        if (ref = "reset", this.getSelectedScheme().indexOf(ref) >= 0) {
+        // this line causes an error when using a dynamic seq and may need to be revisited
+        // this.getSelectedScheme().indexOf is not an array
+        // used .opt.seqs in the interim 
+        if (ref = "reset", this.getSelectedScheme().opt.seqs.indexOf(ref) >= 0) {
           return this.getSelectedScheme().reset();
         }
       }
