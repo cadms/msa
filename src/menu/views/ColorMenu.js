@@ -55,6 +55,11 @@ const ColorMenu = MenuBuilder.extend({
   },
 
   getColorschemes: function() {
+    const consensusSeq = this.g.stats.consensus()
+
+    this.g.colorscheme.addDynScheme("mismatch", (letter, info) => {
+      return letter !== consensusSeq[info.pos] ? "red" : "#fff"
+    })
     
     var schemes  = [];
     schemes.push({name: "Taylor", id: "taylor"});
