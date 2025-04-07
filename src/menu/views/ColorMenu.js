@@ -3,17 +3,17 @@ const dom = require("dom-helper");
 
 const ColorMenu = MenuBuilder.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.el.style.display = "inline-block";
-    
-    return this.listenTo(this.g.colorscheme, "change", function() {
+
+    return this.listenTo(this.g.colorscheme, "change", function () {
       return this.render();
     });
-    
+
   },
 
-  render: function() {
+  render: function () {
     var menuColor = this.setName("Color scheme");
     this.removeAllNodes();
 
@@ -40,7 +40,7 @@ const ColorMenu = MenuBuilder.extend({
     return this;
   },
 
-  addScheme: function(menuColor,scheme) {
+  addScheme: function (menuColor, scheme) {
     var style = {};
     var current = this.g.colorscheme.get("scheme");
     if (current === scheme.id) {
@@ -50,39 +50,39 @@ const ColorMenu = MenuBuilder.extend({
     return this.addNode(scheme.name, () => {
       this.g.colorscheme.set("scheme", scheme.id)
     }, {
-        style: style
+      style: style
     });
   },
 
-  getColorschemes: function() {
+  getColorschemes: function () {
     const consensusSeq = this.g.stats.consensus()
 
     this.g.colorscheme.addDynScheme("mismatch", (letter, info) => {
       return letter !== consensusSeq[info.pos] ? "red" : "#fff"
     })
-    
-    var schemes  = [];
-    schemes.push({name: "Taylor", id: "taylor"});
-    schemes.push({name: "Buried", id: "buried"});
-    schemes.push({name: "Cinema", id: "cinema"});
-    schemes.push({name: "Clustal", id: "clustal"});
-    schemes.push({name: "Clustal2", id: "clustal2"});
-    schemes.push({name: "Helix", id: "helix"});
-    schemes.push({name: "Hydrophobicity", id: "hydro"});
-    schemes.push({name: "Lesk", id: "lesk"});
-    schemes.push({name: "MAE", id: "mae"});
-    schemes.push({name: "Nucleotide", id: "nucleotide"});
-    schemes.push({name: "Purine", id: "purine"});
-    schemes.push({name: "PID", id: "pid"});
-    schemes.push({name: "Strand", id: "strand"});
-    schemes.push({name: "Turn", id: "turn"});
-    schemes.push({name: "Zappo", id: "zappo"});
-    schemes.push({name: "Mismatch", id: "mismatch"});
-    schemes.push({name: "No color", id: "foo"});
+
+    var schemes = [];
+    schemes.push({ name: "No color", id: "foo" });
+    schemes.push({ name: "Buried", id: "buried" });
+    schemes.push({ name: "Cinema", id: "cinema" });
+    schemes.push({ name: "Clustal", id: "clustal" });
+    schemes.push({ name: "Clustal2", id: "clustal2" });
+    schemes.push({ name: "Helix", id: "helix" });
+    schemes.push({ name: "Hydrophobicity", id: "hydro" });
+    schemes.push({ name: "Lesk", id: "lesk" });
+    schemes.push({ name: "MAE", id: "mae" });
+    schemes.push({ name: "Mismatch", id: "mismatch" });
+    schemes.push({ name: "Nucleotide", id: "nucleotide" });
+    schemes.push({ name: "Purine", id: "purine" });
+    schemes.push({ name: "PID", id: "pid" });
+    schemes.push({ name: "Strand", id: "strand" });
+    schemes.push({ name: "Taylor", id: "taylor" });
+    schemes.push({ name: "Turn", id: "turn" });
+    schemes.push({ name: "Zappo", id: "zappo" });
     return schemes;
   },
 
-  grey: function(menuColor) {
+  grey: function (menuColor) {
 
     // greys all lowercase letters
     // @addNode "Shade", =>

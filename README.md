@@ -177,8 +177,7 @@ There also many other option - grouped into these categories. See below for more
 
 ## Getting help
 
-Please open an [issue](https://github.com/wilzbach/msa/issues/new)
-or ping us on [Gitter](https://gitter.im/wilzbach/msa)
+Ping us on [Gitter](https://gitter.im/wilzbach/msa)
 
 ### MSAViewer in Action
 

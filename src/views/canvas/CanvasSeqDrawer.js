@@ -1,31 +1,31 @@
-import {extend} from "lodash";
+import { extend } from "lodash";
 
 const Drawer = {
 
   // caching the access is done for performance reasons
-  updateConfig: function() {
+  updateConfig: function () {
     this.rectWidth = this.g.zoomer.get('columnWidth');
     this.rectHeight = this.g.zoomer.get('rowHeight');
   },
 
-  drawLetters: function() {
+  drawLetters: function () {
 
     this.updateConfig();
 
     // rects
     this.ctx.globalAlpha = this.g.colorscheme.get("opacity");
-    this.drawSeqs(function(data) { return this.drawSeq(data, this._drawRect); });
+    this.drawSeqs(function (data) { return this.drawSeq(data, this._drawRect); });
     this.ctx.globalAlpha = 1;
 
     // letters
-    if ( this.rectWidth >= this.g.zoomer.get('minLetterDrawSize')) {
-      this.drawSeqs(function(data) { return this.drawSeq(data, this._drawLetter); });
+    if (this.rectWidth >= this.g.zoomer.get('minLetterDrawSize')) {
+      this.drawSeqs(function (data) { return this.drawSeq(data, this._drawLetter); });
     }
 
     return this;
   },
 
-  drawSeqs: function(callback, target) {
+  drawSeqs: function (callback, target) {
     const hidden = this.g.columns.get("hidden");
 
     target = target || this;
@@ -34,41 +34,42 @@ const Drawer = {
 
     for (let i = start; i < this.model.length; i++) {
       const seq = this.model.at(i);
+      console.log(seq)
       if (seq.get('hidden')) {
         continue;
       }
-      callback.call(target, {model: seq, yPos: y, y: i, hidden: hidden});
+      callback.call(target, { model: seq, yPos: y, y: i, hidden: hidden });
 
       const seqHeight = (seq.attributes.height || 1) * this.rectHeight;
       y = y + seqHeight;
 
       // out of viewport - stop
       if (y > this.height) {
-          break;
+        break;
       }
     }
   },
 
   // calls the callback for every drawable row
-  drawRows: function(callback, target) {
-    return this.drawSeqs(function(data) { return this.drawRow(data, callback, target); });
+  drawRows: function (callback, target) {
+    return this.drawSeqs(function (data) { return this.drawRow(data, callback, target); });
   },
 
   // draws a single row
-  drawRow: function(data, callback, target) {
+  drawRow: function (data, callback, target) {
     const rectWidth = this.g.zoomer.get("columnWidth");
-    const start = Math.max(0, Math.abs(Math.ceil( - this.g.zoomer.get('_alignmentScrollLeft') / rectWidth)));
-    const x = - Math.abs( - this.g.zoomer.get('_alignmentScrollLeft') % rectWidth);
+    const start = Math.max(0, Math.abs(Math.ceil(- this.g.zoomer.get('_alignmentScrollLeft') / rectWidth)));
+    const x = - Math.abs(- this.g.zoomer.get('_alignmentScrollLeft') % rectWidth);
 
     const xZero = x - start * rectWidth;
     const yZero = data.yPos;
-    return callback.call(target, {model: data.model, xZero: xZero, yZero: yZero, hidden: data.hidden});
+    return callback.call(target, { model: data.model, xZero: xZero, yZero: yZero, hidden: data.hidden });
   },
 
   // returns first sequence in the viewport
   // y is the position to start drawing
-  getStartSeq: function() {
-    const start = (Math.max(0, Math.floor( this.g.zoomer.get('_alignmentScrollTop') / this.rectHeight))) + 1;
+  getStartSeq: function () {
+    const start = (Math.max(0, Math.floor(this.g.zoomer.get('_alignmentScrollTop') / this.rectHeight))) + 1;
     let counter = 0;
     let i = 0;
     while (counter < start && i < this.model.length) {
@@ -76,15 +77,15 @@ const Drawer = {
       i++;
     }
     const y = Math.max(0, this.g.zoomer.get('_alignmentScrollTop') - counter * this.rectHeight + (this.model.at(i - 1)
-    .attributes.height  || 1 ) * this.rectHeight);
+      .attributes.height || 1) * this.rectHeight);
     return [i - 1, -y];
   },
 
   // returns [the clicked seq for a viewport, row number]
-  _getSeqForYClick: function(click) {
+  _getSeqForYClick: function (click) {
     const [start, yDiff] = this.getStartSeq();
     const yRel = yDiff % this.rectHeight;
-    const clickedRows = (Math.max(0, Math.floor( (click - yRel ) / this.rectHeight))) + 1;
+    const clickedRows = (Math.max(0, Math.floor((click - yRel) / this.rectHeight))) + 1;
     let counter = 0;
     let i = start;
     while (counter < clickedRows && i < this.model.length) {
@@ -96,20 +97,20 @@ const Drawer = {
   },
 
   // TODO: very expensive method
-  drawSeq: function(data, callback) {
+  drawSeq: function (data, callback) {
     const seq = data.model.get("seq");
     const y = data.yPos;
     const rectWidth = this.rectWidth;
     const rectHeight = this.rectHeight;
 
     // skip unneeded blocks at the beginning
-    const start = Math.max(0, Math.abs(Math.ceil( - this.g.zoomer.get('_alignmentScrollLeft') / rectWidth)));
-    let x = - Math.abs( - this.g.zoomer.get('_alignmentScrollLeft') % rectWidth);
+    const start = Math.max(0, Math.abs(Math.ceil(- this.g.zoomer.get('_alignmentScrollLeft') / rectWidth)));
+    let x = - Math.abs(- this.g.zoomer.get('_alignmentScrollLeft') % rectWidth);
 
-    const res = {rectWidth: rectWidth, rectHeight: rectHeight, yPos: y, y: data.y};
+    const res = { rectWidth: rectWidth, rectHeight: rectHeight, yPos: y, y: data.y };
     const elWidth = this.width;
 
-    for (let j = start; j <  seq.length; j++) {
+    for (let j = start; j < seq.length; j++) {
       let c = seq[j];
       c = c.toUpperCase();
 
@@ -136,14 +137,14 @@ const Drawer = {
     }
   },
 
-  _drawRect: function(that, data) {
-    const color = that.color.getColor( data.c, {
-      pos:data.x,
+  _drawRect: function (that, data) {
+    const color = that.color.getColor(data.c, {
+      pos: data.x,
       y: data.y
     });
     if ((typeof color !== "undefined" && color !== null)) {
       that.ctx.fillStyle = color;
-      return that.ctx.fillRect(data.xPos,data.yPos,data.rectWidth,data.rectHeight);
+      return that.ctx.fillRect(data.xPos, data.yPos, data.rectWidth, data.rectHeight);
     }
   },
 
@@ -151,19 +152,19 @@ const Drawer = {
   // Performance:
   // chrome: 2000ms drawLetter - 1000ms drawRect
   // FF: 1700ms drawLetter - 300ms drawRect
-  _drawLetter: function(that,data) {
+  _drawLetter: function (that, data) {
     if (that.g.config.get("shouldRenderSeqBlockAsSvg") === true) {
       that.ctx.fillStyle = "black";
       that.ctx.textAlign = "center";
       that.ctx.textBaseline = "middle";
       that.ctx.fillText(data.c, data.xPos + data.rectWidth / 2, data.yPos + data.rectHeight - data.rectHeight / 2);
     } else {
-      return that.ctx.drawImage( that.cache.getFontTile(data.c, data.rectWidth, data.rectHeight), data.xPos, data.yPos, data.rectWidth, data.rectHeight);
+      return that.ctx.drawImage(that.cache.getFontTile(data.c, data.rectWidth, data.rectHeight), data.xPos, data.yPos, data.rectWidth, data.rectHeight);
     }
   }
 };
 
-const CanvasSeqDrawer = function(g,ctx,model,opts) {
+const CanvasSeqDrawer = function (g, ctx, model, opts) {
   this.g = g;
   this.ctx = ctx;
   this.model = model;

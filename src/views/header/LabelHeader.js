@@ -6,14 +6,14 @@ const LabelHeader = view.extend({
 
   className: "biojs_msa_headers",
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
 
     this.listenTo(this.g.vis, "change:metacell change:labels", this.render);
     return this.listenTo(this.g.zoomer, "change:labelWidth change:metaWidth", this.render);
   },
 
-  render: function() {
+  render: function () {
 
     dom.removeAllChilds(this.el);
 
@@ -34,7 +34,7 @@ const LabelHeader = view.extend({
     return this;
   },
 
-  labelDOM: function() {
+  labelDOM: function () {
     var labelHeader = k.mk("div");
     labelHeader.style.width = this.g.zoomer.getLabelWidth();
     labelHeader.style.display = "inline-block";
@@ -53,14 +53,13 @@ const LabelHeader = view.extend({
 
     if (this.g.vis.get("labelName")) {
       var name = this.addEl("Label");
-      //name.style.marginLeft = "50px"
       labelHeader.appendChild(name);
     }
 
     return labelHeader;
   },
 
-  addEl: function(content, width) {
+  addEl: function (content, width) {
     var id = document.createElement("span");
     id.textContent = content;
     if ((typeof width !== "undefined" && width !== null)) {
@@ -70,11 +69,11 @@ const LabelHeader = view.extend({
     return id;
   },
 
-  metaDOM: function() {
+  metaDOM: function () {
     var metaHeader = k.mk("div");
     metaHeader.style.width = this.g.zoomer.getMetaWidth();
     metaHeader.style.display = "inline-block";
-    
+
     if (this.g.vis.get("metaGaps")) {
       metaHeader.appendChild(this.addEl("Gaps", this.g.zoomer.get('metaGapWidth')));
       // TODO:

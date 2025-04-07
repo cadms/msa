@@ -6,12 +6,12 @@ const view = require("backbone-viewj");
 // see https://github.com/wilzbach/msa/issues/149 for more details
 
 const MenuBuilder = view.extend({
-  initialize: function(opts) {
+  initialize: function (opts) {
     this._nodes = [];
     this.name = opts.name || "";
     this.el.className += "smenubar";
   },
-  render: function() {
+  render: function () {
 
     // remove all childs
     let fc = this.el.firstChild;
@@ -23,14 +23,23 @@ const MenuBuilder = view.extend({
     // replace child
     this.el.appendChild(this.buildDOM());
   },
-  setName: function(name) {
+  setName: function (name) {
     this.name = name;
   },
-  addNode: function(label, callback, opts) {
+  addNode: function (label, callback, opts) {
     let style;
     if (opts != null) {
       style = opts.style;
     }
+
+    if (style) {
+      style.cursor = 'pointer';
+    } else {
+      style = {
+        cursor: 'pointer'
+      }
+    }
+
     if (this._nodes == null) {
       this._nodes = [];
     }
@@ -41,9 +50,9 @@ const MenuBuilder = view.extend({
     });
   },
 
-  getNode: function(label) {
+  getNode: function (label) {
     let rNode;
-    this._nodes.forEach(function(el) {
+    this._nodes.forEach(function (el) {
       if (el.label === label) {
         rNode = el;
       }
@@ -51,28 +60,28 @@ const MenuBuilder = view.extend({
     return rNode;
   },
 
-  modifyNode: function(label, callback, opts) {
+  modifyNode: function (label, callback, opts) {
     let node = this.getNode(label);
     node.callback = callback || node.callback;
     opts = opts || {};
     node.style = opts.style || node.style;
   },
 
-  renameNode: function(label, newLabel) {
+  renameNode: function (label, newLabel) {
     let node = this.getNode(label);
     node.label = newLabel || node.label;
   },
 
-  removeNode: function(label) {
+  removeNode: function (label) {
     let node = this.getNode(label);
     this._nodes.splice(this._nodes.indexOf(node), 1);
   },
 
-  removeAllNodes: function() {
+  removeAllNodes: function () {
     this._nodes = [];
   },
 
-  buildDOM: function() {
+  buildDOM: function () {
     let div = document.createElement("div");
     div.className = "dropdown";
     div.appendChild(this._buildM({
@@ -81,14 +90,14 @@ const MenuBuilder = view.extend({
     }));
     return div;
   },
-  _buildM: function(data) {
+  _buildM: function (data) {
     let displayedButton, frag, key, li, node, style, _ref;
     let nodes = data.nodes;
     let name = data.name;
 
     let menuUl = document.createElement("ul");
     menuUl.className = "dropdown-menu";
-    menuUl.setAttribute('aria-labelledby', name.replace(/\s+/g, '')+"DropDown");
+    menuUl.setAttribute('aria-labelledby', name.replace(/\s+/g, '') + "DropDown");
     menuUl.style.display = "none";
 
     // currently we support one-level
@@ -113,7 +122,7 @@ const MenuBuilder = view.extend({
     displayedButton.className = "btn btn-secondary dropdown-toggle";
     displayedButton.setAttribute('role', 'button');
     displayedButton.setAttribute('data-toggle', 'dropdown');
-    displayedButton.id = name.replace(/\s+/g, '')+"DropDown";
+    displayedButton.id = name.replace(/\s+/g, '') + "DropDown";
     this.trigger("new:button", displayedButton);
 
     // HACK to be able to hide the submenu
@@ -136,7 +145,7 @@ const MenuBuilder = view.extend({
   },
 
   // internal method to display the lower menu on a click
-  _showMenu: function(e, menu, target) {
+  _showMenu: function (e, menu, target) {
     let rect;
     menu.style.display = "block";
     menu.style.position = "absolute";

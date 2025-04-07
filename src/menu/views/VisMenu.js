@@ -3,13 +3,13 @@ var dom = require("dom-helper");
 
 const VisMenu = MenuBuilder.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.el.style.display = "inline-block";
     return this.listenTo(this.g.vis, "change", this.render);
   },
 
-  render: function() {
+  render: function () {
     this.removeAllNodes();
     this.setName("Vis.elements");
 
@@ -47,36 +47,35 @@ const VisMenu = MenuBuilder.extend({
 
     if (this.g.vis.get(visEl.id)) {
       var pre = "Hide ";
-      style.color = "red";
     } else {
       pre = "Show ";
-      style.color = "green";
     }
 
-    return this.addNode( (pre + visEl.name), (() => {
-      return this.g.vis.set(visEl.id, ! this.g.vis.get(visEl.id));
+    return this.addNode((pre + visEl.name), (() => {
+      return this.g.vis.set(visEl.id, !this.g.vis.get(visEl.id));
     }
     ),
-      {style: style
-    });
+      {
+        style: style
+      });
   },
 
-  getVisElements: function() {
+  getVisElements: function () {
     var vis = [];
-    vis.push({name: "residues indices", id: "markers"});
-    vis.push({name: "ID/Label", id: "labels"});
     //vis.push name: "Sequences", id: "sequences"
-    vis.push({name: "meta info (Gaps/Ident)", id: "metacell"});
+    vis.push({ name: "conservation weights", id: "conserv" });
+    vis.push({ name: "meta info (Gaps/Ident)", id: "metacell" });
     // vis.push({name: "overview panel", id: "overviewbox"});
-    vis.push({name: "sequence logo", id: "seqlogo"});
-    vis.push({name: "gap weights", id: "gapHeader"});
-    vis.push({name: "conservation weights", id: "conserv"});
-    vis.push({name: "scale slider", id: "scaleslider"});
+    vis.push({ name: "sequence logo", id: "seqlogo" });
+    vis.push({ name: "gap weights", id: "gapHeader" });
+    vis.push({ name: "scale slider", id: "scaleslider" });
     //vis.push name: "Left header", id: "leftHeader"
-    vis.push({name: "Label", id: "labelName"});
-    vis.push({name: "ID", id: "labelId"});
+    vis.push({ name: "residues indices", id: "markers" });
+    vis.push({ name: "ID/Label", id: "labels" });
+    vis.push({ name: "Label", id: "labelName" });
+    vis.push({ name: "ID", id: "labelId" });
     //vis.push name: "Label checkbox", id: "labelCheckbox"
-    vis.push({name: "gaps %", id: "metaGaps"});
+    vis.push({ name: "gaps %", id: "metaGaps" });
     // vis.push({name: "identity score", id: "metaIdentity"});
     // vis.push name: "Meta links", id: "metaLinks"
     return vis;

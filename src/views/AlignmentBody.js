@@ -4,13 +4,13 @@ import LabelBlock from "./labels/LabelBlock";
 
 const View = boneView.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
 
     if (true) {
-      var labelblock = new LabelBlock({model: this.model, g: this.g});
+      var labelblock = new LabelBlock({ model: this.model, g: this.g });
       labelblock.ordering = -1;
-      this.addView("labelblock",labelblock);
+      this.addView("labelblock", labelblock);
     }
 
     if (this.g.vis.get("sequences")) {
@@ -30,7 +30,7 @@ const View = boneView.extend({
         });
       }
       seqblock.ordering = 0;
-      this.addView("seqblock",seqblock);
+      this.addView("seqblock", seqblock);
     }
 
     this.listenTo(this.g.zoomer, "change:alignmentHeight", this.adjustHeight);
@@ -39,7 +39,7 @@ const View = boneView.extend({
     return this;
   },
 
-  render: function() {
+  render: function () {
     this.renderSubviews();
     this.el.className = "biojs_msa_albody";
     this.el.style.whiteSpace = "nowrap";
@@ -48,7 +48,7 @@ const View = boneView.extend({
     return this;
   },
 
-  adjustHeight: function() {
+  adjustHeight: function () {
     if (this.g.zoomer.get("alignmentHeight") === "auto") {
       // TODO: fix the magic 5
       return this.el.style.height = (this.g.zoomer.get("rowHeight") * this.model.length) + 5;
@@ -57,12 +57,12 @@ const View = boneView.extend({
     }
   },
 
-  adjustWidth: function() {
+  adjustWidth: function () {
     // TODO: 15 is the width of the scrollbar
     return this.el.style.width = this.getWidth();
   },
 
-  getWidth: function() {
+  getWidth: function () {
     var width = 0;
     width += this.g.zoomer.getLeftBlockWidth();
     if (this.g.vis.get("sequences")) {

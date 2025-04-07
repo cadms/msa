@@ -3,46 +3,46 @@ import LabelRowView from "./LabelRowView";
 
 const View = boneView.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.draw();
     this.listenTo(this.g.zoomer, "change:_alignmentScrollTop", this._adjustScrollingTop);
-    this.g.vis.once('change:loaded', this._adjustScrollingTop , this);
+    this.g.vis.once('change:loaded', this._adjustScrollingTop, this);
 
-    this.listenTo(this.g.zoomer,"change:alignmentHeight", this._setHeight);
-    this.listenTo(this.model,"change:reference", this.draw);
+    this.listenTo(this.g.zoomer, "change:alignmentHeight", this._setHeight);
+    this.listenTo(this.model, "change:reference", this.draw);
 
-    return this.listenTo(this.model,"reset add remove", () => {
+    return this.listenTo(this.model, "reset add remove", () => {
       this.draw();
       return this.render();
     });
   },
 
-  draw: function() {
+  draw: function () {
     this.removeViews();
-    console.log("redraw columns" , this.model.length);
+    console.log("redraw columns", this.model.length);
     for (var i = 0; i < this.model.length; i++) {
-        if (this.model.at(i).get('hidden')) { continue; }
-        var view = new LabelRowView({model: this.model.at(i), g: this.g});
-        view.ordering = i;
-        this.addView("row_" + i, view)
+      if (this.model.at(i).get('hidden')) { continue; }
+      var view = new LabelRowView({ model: this.model.at(i), g: this.g });
+      view.ordering = i;
+      this.addView("row_" + i, view)
     }
   },
 
   events:
-    {"scroll": "_sendScrollEvent"},
+    { "scroll": "_sendScrollEvent" },
 
   // broadcast the scrolling event (by the scrollbar)
-  _sendScrollEvent: function() {
-    return this.g.zoomer.set("_alignmentScrollTop", this.el.scrollTop, {origin: "label"});
+  _sendScrollEvent: function () {
+    return this.g.zoomer.set("_alignmentScrollTop", this.el.scrollTop, { origin: "label" });
   },
 
   // sets the scrolling property (from another event e.g. dragging)
   _adjustScrollingTop() {
-    return this.el.scrollTop =  this.g.zoomer.get("_alignmentScrollTop");
+    return this.el.scrollTop = this.g.zoomer.get("_alignmentScrollTop");
   },
 
-  render: function() {
+  render: function () {
     this.renderSubviews();
     this.el.className = "biojs_msa_labelblock";
     this.el.style.display = "inline-block";
@@ -56,7 +56,7 @@ const View = boneView.extend({
   },
 
 
-  _setHeight: function() {
+  _setHeight: function () {
     return this.el.style.height = this.g.zoomer.get("alignmentHeight") + "px";
   }
 });

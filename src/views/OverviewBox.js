@@ -1,16 +1,16 @@
 const view = require("backbone-viewj");
 const mouse = require("mouse-pos");
 const jbone = require("jbone");
-import {possel} from "../g/selection/Selection";
+import { possel } from "../g/selection/Selection";
 
 const OverviewBox = view.extend({
 
   className: "biojs_msa_overviewbox",
   tagName: "canvas",
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
-    this.listenTo( this.g.zoomer,"change:boxRectWidth change:boxRectHeight change:overviewboxPaddingTop", this.rerender);
+    this.listenTo(this.g.zoomer, "change:boxRectWidth change:boxRectHeight change:overviewboxPaddingTop", this.rerender);
     this.listenTo(this.g.zoomer, "change:alignmentHeight change:alignmentWidth", this.rerender);
     this.listenTo(this.g.zoomer, "change:overviewboxWidth change:overviewboxHeigth", this.rerender);
     this.listenTo(this.g.selcol, "add reset change", this.rerender);
@@ -20,7 +20,7 @@ const OverviewBox = view.extend({
 
     // color
     this.color = this.g.colorscheme.getSelectedScheme();
-    this.listenTo(this.g.colorscheme, "change:scheme", function() {
+    this.listenTo(this.g.colorscheme, "change:scheme", function () {
       this.color = this.g.colorscheme.getSelectedScheme();
       return this.rerender();
     });
@@ -28,37 +28,38 @@ const OverviewBox = view.extend({
   },
 
   events:
-    {click: "_onclick",
+  {
+    click: "_onclick",
     mousedown: "_onmousedown"
-    },
+  },
 
-  rerender: function() {
+  rerender: function () {
     if (!this.g.config.get("manualRendering")) {
       return this.render();
     }
   },
 
-  render: function() {
+  render: function () {
     this._createCanvas();
     this.el.textContent = "overview";
     this.el.style.marginTop = this.g.zoomer.get("overviewboxPaddingTop");
 
     // background bg for non-drawed area
     this.ctx.fillStyle = "#999999";
-    this.ctx.fillRect(0,0,this.el.width,this.el.height);
+    this.ctx.fillRect(0, 0, this.el.width, this.el.height);
 
     const len = this.model.length;
     const hidden = this.g.columns.get("hidden");
     const showLowerCase = this.g.colorscheme.get("showLowerCase");
 
     let y = -this.coords.boxes_size.y;
-    for (let ybox=0; ybox < this.coords.boxes.y; ybox++) {
+    for (let ybox = 0; ybox < this.coords.boxes.y; ybox++) {
       const seqs = [];
       const seq_hidden = [];
-      for (let i = Math.floor(ybox*this.coords.resid_per_box.y); 
-               i < Math.floor((ybox+1)*this.coords.resid_per_box.y) && i < len; i++) {
+      for (let i = Math.floor(ybox * this.coords.resid_per_box.y);
+        i < Math.floor((ybox + 1) * this.coords.resid_per_box.y) && i < len; i++) {
         // fixes weird bug on tatyana's machine
-        if (!this.model.at(i)){
+        if (!this.model.at(i)) {
           continue;
         }
         seqs.push(this.model.at(i).get("seq"));
@@ -67,10 +68,10 @@ const OverviewBox = view.extend({
       let x = 0;
       y = y + this.coords.boxes_size.y;
 
-      for (let xbox = 0; xbox < this.coords.boxes.x; xbox++){
+      for (let xbox = 0; xbox < this.coords.boxes.x; xbox++) {
         var colors = [];
-        for (let i=0; i<seqs.length; i++) {
-          for (let j=Math.floor(xbox*this.coords.resid_per_box.x); j<Math.floor((xbox+1)*this.coords.resid_per_box.x) && j<seqs[i].length; j++) {
+        for (let i = 0; i < seqs.length; i++) {
+          for (let j = Math.floor(xbox * this.coords.resid_per_box.x); j < Math.floor((xbox + 1) * this.coords.resid_per_box.x) && j < seqs[i].length; j++) {
             if (seq_hidden[i]) {
               colors.push("grey");
               continue;
@@ -78,18 +79,18 @@ const OverviewBox = view.extend({
             let c = seqs[i][j];
             // todo: optional uppercasing
             if (showLowerCase) { c = c.toUpperCase(); }
-            let color = this.color.getColor(c, {pos: j});
-  
+            let color = this.color.getColor(c, { pos: j });
+
             if (hidden.indexOf(j) >= 0) {
               color = "grey";
             }
-  
+
             if ((typeof color !== "undefined" && color !== null)) {
               colors.push(color);
             }
           }
         }
-        
+
         if (colors.length !== 0) {
           this.ctx.fillStyle = this._mode(colors);
           this.ctx.fillRect(x, y, this.coords.boxes_size.x, this.coords.boxes_size.y);
@@ -103,44 +104,48 @@ const OverviewBox = view.extend({
   },
 
   coords: {
-    screen_to_model: function(val, coord){
+    screen_to_model: function (val, coord) {
       const pos = val * this.resid_per_box[coord] / this.boxes_size[coord];
       return Math.floor(pos)
     },
-    model_to_screen: function(val, coord){
+    model_to_screen: function (val, coord) {
       return Math.floor(val * this.boxes_size[coord] / this.resid_per_box[coord]);
     },
-    updatecoords_transform: function(overviewBox) {
+    updatecoords_transform: function (overviewBox) {
       const rectHeight = overviewBox.g.zoomer.get('boxRectHeight');
       const rectWidth = overviewBox.g.zoomer.get('boxRectWidth');
       const setting_w = overviewBox.g.zoomer.get('overviewboxWidth');
       const setting_h = overviewBox.g.zoomer.get('overviewboxHeight');
 
       const contWidth = setting_w === "fixed" ? overviewBox.model.getMaxLength() * rectWidth :
-                        Math.min(overviewBox.g.zoomer.get('alignmentWidth') + overviewBox.g.zoomer.getLeftBlockWidth(),
-                                 overviewBox.model.getMaxLength() * rectWidth);
+        Math.min(overviewBox.g.zoomer.get('alignmentWidth') + overviewBox.g.zoomer.getLeftBlockWidth(),
+          overviewBox.model.getMaxLength() * rectWidth);
       const contHeight = setting_h === "fixed" ? overviewBox.model.length * rectHeight :
-                         Math.min((isNaN(parseInt(setting_h, 10)) ? 1e10 : parseInt(setting_h,10)),
-                                  overviewBox.model.length * rectHeight);
-      
-      this.container_size = {x: contWidth, y: contHeight};
-      this.boxes_size = {x: rectWidth, y: rectHeight};
-      this.resid_per_box = {x: Math.max(1, overviewBox.model.getMaxLength() / contWidth * rectWidth),
-                            y: Math.max(1, overviewBox.model.length / contHeight * rectHeight)};
-      this.boxes = {x: Math.ceil(contWidth / rectWidth),
-                    y: Math.ceil(contHeight / rectHeight)};
+        Math.min((isNaN(parseInt(setting_h, 10)) ? 1e10 : parseInt(setting_h, 10)),
+          overviewBox.model.length * rectHeight);
+
+      this.container_size = { x: contWidth, y: contHeight };
+      this.boxes_size = { x: rectWidth, y: rectHeight };
+      this.resid_per_box = {
+        x: Math.max(1, overviewBox.model.getMaxLength() / contWidth * rectWidth),
+        y: Math.max(1, overviewBox.model.length / contHeight * rectHeight)
+      };
+      this.boxes = {
+        x: Math.ceil(contWidth / rectWidth),
+        y: Math.ceil(contHeight / rectHeight)
+      };
     }
   },
 
-  _mode: function(arr) {
+  _mode: function (arr) {
     // get the mode, i.e. the most frequent element of an array
-    return arr.sort((a,b) =>
-              arr.filter(v => v===a).length
-            - arr.filter(v => v===b).length
+    return arr.sort((a, b) =>
+      arr.filter(v => v === a).length
+      - arr.filter(v => v === b).length
     ).pop();
   },
 
-  _drawSelection: function() {
+  _drawSelection: function () {
     // hide during selection
     if (this.dragStart.length > 0 && !this.prolongSelection) { return; }
 
@@ -149,33 +154,33 @@ const OverviewBox = view.extend({
     const len = this.g.selcol.length;
     for (let i = 0; i < len; i++) {
       const sel = this.g.selcol.at(i);
-      if(!sel) continue;
+      if (!sel) continue;
       let seq, pos;
       if (sel.get('type') === 'column') {
-        this.ctx.fillRect( this.coords.boxes_size.x * sel.get('xStart'),0,this.coords.boxes_size.x *
-        (sel.get('xEnd') - sel.get('xStart') + 1), this.coords.container_size.y
+        this.ctx.fillRect(this.coords.boxes_size.x * sel.get('xStart'), 0, this.coords.boxes_size.x *
+          (sel.get('xEnd') - sel.get('xStart') + 1), this.coords.container_size.y
         );
       } else if (sel.get('type') === 'row') {
-        seq = (this.model.filter(function(el) { return el.get('id') === sel.get('seqId'); }))[0];
+        seq = (this.model.filter(function (el) { return el.get('id') === sel.get('seqId'); }))[0];
         pos = this.model.indexOf(seq);
-        this.ctx.fillRect(0, this.coords.model_to_screen(pos, 'y'), 
-                          this.coords.model_to_screen(seq.get('seq').length, 'x'), this.coords.boxes_size.y);
+        this.ctx.fillRect(0, this.coords.model_to_screen(pos, 'y'),
+          this.coords.model_to_screen(seq.get('seq').length, 'x'), this.coords.boxes_size.y);
       } else if (sel.get('type') === 'pos') {
-        seq = (this.model.filter(function(el) { return el.get('id') === sel.get('seqId'); }))[0];
+        seq = (this.model.filter(function (el) { return el.get('id') === sel.get('seqId'); }))[0];
         pos = this.model.indexOf(seq);
-        this.ctx.fillRect(this.coords.model_to_screen(sel.get('xStart'),'x'), this.coords.model_to_screen(pos, 'y'), 
-                          this.coords.model_to_screen(sel.get('xEnd') - sel.get('xStart') + 1, 'x'), this.coords.boxes_size.y);
+        this.ctx.fillRect(this.coords.model_to_screen(sel.get('xStart'), 'x'), this.coords.model_to_screen(pos, 'y'),
+          this.coords.model_to_screen(sel.get('xEnd') - sel.get('xStart') + 1, 'x'), this.coords.boxes_size.y);
       }
     }
 
     return this.ctx.globalAlpha = 1;
   },
 
-  _onclick: function(evt) {
-    return this.g.trigger("meta:click", {seqId: this.model.get("id", {evt:evt})});
+  _onclick: function (evt) {
+    return this.g.trigger("meta:click", { seqId: this.model.get("id", { evt: evt }) });
   },
 
-  _onmousemove: function(e) {
+  _onmousemove: function (e) {
     // duplicate events
     if (this.dragStart.length === 0) { return; }
 
@@ -183,8 +188,8 @@ const OverviewBox = view.extend({
     this.ctx.fillStyle = "#666666";
     this.ctx.globalAlpha = 0.9;
 
-    const rect = this._calcSelection( mouse.abs(e) );
-    this.ctx.fillRect(rect[0][0],rect[1][0],rect[0][1] - rect[0][0], rect[1][1] - rect[1][0]);
+    const rect = this._calcSelection(mouse.abs(e));
+    this.ctx.fillRect(rect[0][0], rect[1][0], rect[0][1] - rect[0][0], rect[1][1] - rect[1][0]);
 
     // abort selection events of the browser
     e.preventDefault();
@@ -192,7 +197,7 @@ const OverviewBox = view.extend({
   },
 
   // start the selection mode
-  _onmousedown: function(e) {
+  _onmousedown: function (e) {
     this.dragStart = mouse.abs(e);
     this.dragStartRel = mouse.rel(e);
 
@@ -208,7 +213,7 @@ const OverviewBox = view.extend({
   },
 
   // calculates the current selection
-  _calcSelection: function(dragMove) {
+  _calcSelection: function (dragMove) {
     // relative to first click
     let dragRel = [dragMove[0] - this.dragStart[0], dragMove[1] - this.dragStart[1]];
 
@@ -233,7 +238,7 @@ const OverviewBox = view.extend({
     return rect;
   },
 
-  _endSelection: function(dragEnd) {
+  _endSelection: function (dragEnd) {
     // remove listeners
     jbone(document.body).off('.overmove');
     jbone(document.body).off('.overup');
@@ -260,7 +265,7 @@ const OverviewBox = view.extend({
     // select
     var selis = [];
     for (let j = rect[1][0]; j <= rect[1][1]; j++) {
-      const args = {seqId: this.model.at(j).get('id'), xStart: rect[0][0], xEnd: rect[0][1]};
+      const args = { seqId: this.model.at(j).get('id'), xStart: rect[0][0], xEnd: rect[0][1] };
       selis.push(new possel(args));
     }
 
@@ -279,16 +284,16 @@ const OverviewBox = view.extend({
   },
 
   // ends the selection mode
-  _onmouseup: function(e) {
+  _onmouseup: function (e) {
     return this._endSelection(mouse.abs(e));
   },
 
-  _onmouseout: function(e) {
+  _onmouseout: function (e) {
     return this._endSelection(mouse.abs(e));
   },
 
- // init the canvas
-  _createCanvas: function() {
+  // init the canvas
+  _createCanvas: function () {
     this.coords.updatecoords_transform(this);
 
     this.el.height = this.coords.container_size.y;

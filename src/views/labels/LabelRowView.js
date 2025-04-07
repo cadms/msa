@@ -4,36 +4,36 @@ import MetaView from "./MetaView";
 
 const View = boneView.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.draw();
 
-    this.listenTo(this.g.vis,"change:labels", this.drawR);
-    this.listenTo(this.g.vis,"change:metacell", this.drawR);
-    this.listenTo(this.g.zoomer, "change:rowHeight", function() {
+    this.listenTo(this.g.vis, "change:labels", this.drawR);
+    this.listenTo(this.g.vis, "change:metacell", this.drawR);
+    this.listenTo(this.g.zoomer, "change:rowHeight", function () {
       return this.el.style.height = this.g.zoomer.get("rowHeight") + "px";
     });
 
-    return this.listenTo(this.g.selcol,"change reset add remove", this.setSelection);
+    return this.listenTo(this.g.selcol, "change reset add remove", this.setSelection);
   },
 
-  draw: function() {
+  draw: function () {
     this.removeViews();
     if (this.g.vis.get("labels")) {
-      this.addView("labels", new LabelView({model: this.model, g:this.g}));
+      this.addView("labels", new LabelView({ model: this.model, g: this.g }));
     }
     if (this.g.vis.get("metacell")) {
-      var meta = new MetaView({model: this.model, g:this.g});
+      var meta = new MetaView({ model: this.model, g: this.g });
       return this.addView("metacell", meta);
     }
   },
 
-  drawR: function() {
+  drawR: function () {
     this.draw();
     return this.render();
   },
 
-  render: function() {
+  render: function () {
     this.renderSubviews();
 
     this.el.setAttribute("class", "biojs_msa_labelrow");
@@ -43,12 +43,15 @@ const View = boneView.extend({
     return this;
   },
 
-  setSelection: function() {
+  setSelection: function () {
     var sel = this.g.selcol.getSelForRow(this.model.id);
     if (sel.length > 0) {
-      return this.el.style.fontWeight = "bold";
+      this.el.style.fontWeight = "900";
+      this.el.style.color = "red";
+
     } else {
-      return this.el.style.fontWeight = "normal";
+      this.el.style.fontWeight = "normal";
+      this.el.style.color = "black";
     }
   }
 });
