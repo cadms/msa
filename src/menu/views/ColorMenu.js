@@ -44,7 +44,8 @@ const ColorMenu = MenuBuilder.extend({
     var style = {};
     var current = this.g.colorscheme.get("scheme");
     if (current === scheme.id) {
-      style.backgroundColor = "#77ED80";
+      style.backgroundColor = "#5FA2DD";
+      style.color = "#FFFFFF";
     }
 
     return this.addNode(scheme.name, () => {

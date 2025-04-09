@@ -34,7 +34,6 @@ const Drawer = {
 
     for (let i = start; i < this.model.length; i++) {
       const seq = this.model.at(i);
-      console.log(seq)
       if (seq.get('hidden')) {
         continue;
       }

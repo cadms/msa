@@ -5,19 +5,19 @@ const arrowDown = "\u2193";
 
 const OrderingMenu = MenuBuilder.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.order = "ID";
     return this.el.style.display = "inline-block";
   },
 
-  setOrder: function(order) {
+  setOrder: function (order) {
     this.order = order;
     return this.render();
   },
 
   // TODO: make more generic
-  render: function() {
+  render: function () {
     this.setName("Sorting");
     this.removeAllNodes();
 
@@ -39,7 +39,8 @@ const OrderingMenu = MenuBuilder.extend({
     var text = m.text;
     var style = {};
     if (text === this.order) {
-      style.backgroundColor = "#77ED80";
+      style.backgroundColor = "#5FA2DD";
+      style.color = "#FFFFFF";
     }
     return this.addNode(text, (() => {
       if ((m.precode != null)) { m.precode(); }
@@ -48,31 +49,37 @@ const OrderingMenu = MenuBuilder.extend({
       return this.setOrder(m.text);
     }
     ), {
-        style: style
+      style: style
     });
   },
 
-  getComparators: function() {
+  getComparators: function () {
     var models = [];
 
-    models.push({text: "ID " + arrowUp, comparator: "id"});
+    models.push({ text: "ID " + arrowUp, comparator: "id" });
 
-    models.push({text: "ID " + arrowDown, comparator: function(a, b) {
-      // auto converts to string for localeCompare
-        return - ("" + a.get("id")).localeCompare("" + b.get("id"), [], {numeric: true} );
-    }});
+    models.push({
+      text: "ID " + arrowDown, comparator: function (a, b) {
+        // auto converts to string for localeCompare
+        return - ("" + a.get("id")).localeCompare("" + b.get("id"), [], { numeric: true });
+      }
+    });
 
-    models.push({text: "Label " + arrowUp, comparator: "name"});
+    models.push({ text: "Label " + arrowUp, comparator: "name" });
 
-    models.push({text: "Label " + arrowDown, comparator: function(a, b) {
+    models.push({
+      text: "Label " + arrowDown, comparator: function (a, b) {
         return - a.get("name").localeCompare(b.get("name"));
-    }});
+      }
+    });
 
-    models.push({text: "Seq " + arrowUp, comparator: "seq"});
+    models.push({ text: "Seq " + arrowUp, comparator: "seq" });
 
-    models.push({text: "Seq " + arrowDown, comparator: function(a,b) {
+    models.push({
+      text: "Seq " + arrowDown, comparator: function (a, b) {
         return - a.get("seq").localeCompare(b.get("seq"));
-    }});
+      }
+    });
 
     var setIdent = () => {
       return this.ident = this.g.stats.identity();
@@ -82,30 +89,36 @@ const OrderingMenu = MenuBuilder.extend({
       this.gaps = {};
       return this.model.each((el) => {
         var seq = el.attributes.seq;
-        return this.gaps[el.id] = (seq.reduce(function(memo, c) { return c === '-' ? ++memo: undefined; }),0)/ seq.length;
+        return this.gaps[el.id] = (seq.reduce(function (memo, c) { return c === '-' ? ++memo : undefined; }), 0) / seq.length;
       });
     };
 
-    models.push({text: "Identity " + arrowUp,comparator: ((a,b) => {
-      var val = this.ident[a.id] - this.ident[b.id];
-      console.log(this.ident[a.id],this.ident[b.id]);
-      if (val > 0) { return 1; }
-      if (val < 0) { return -1; }
-      return 0;
-    }
-    ), precode: setIdent});
+    models.push({
+      text: "Identity " + arrowUp, comparator: ((a, b) => {
+        var val = this.ident[a.id] - this.ident[b.id];
+        console.log(this.ident[a.id], this.ident[b.id]);
+        if (val > 0) { return 1; }
+        if (val < 0) { return -1; }
+        return 0;
+      }
+      ), precode: setIdent
+    });
 
-    models.push({text: "Identity " + arrowDown, comparator: ((a,b) => {
-      var val = this.ident[a.id] - this.ident[b.id];
-      if (val > 0) { return -1; }
-      if (val < 0) { return 1; }
-      return 0;
-    }
-    ), precode: setIdent});
+    models.push({
+      text: "Identity " + arrowDown, comparator: ((a, b) => {
+        var val = this.ident[a.id] - this.ident[b.id];
+        if (val > 0) { return -1; }
+        if (val < 0) { return 1; }
+        return 0;
+      }
+      ), precode: setIdent
+    });
 
-    models.push({text: "Consensus to top", comparator(seq) {
+    models.push({
+      text: "Consensus to top", comparator(seq) {
         return !seq.get("ref");
-    }});
+      }
+    });
 
     return models;
   }
