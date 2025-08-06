@@ -2,12 +2,12 @@ import MenuBuilder from "../menubuilder";
 
 const DebugMenu = MenuBuilder.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     return this.el.style.display = "inline-block";
   },
 
-  render: function() {
+  render: function () {
     this.setName("Debug");
 
     this.addNode("Get the code", () => {
@@ -16,7 +16,7 @@ const DebugMenu = MenuBuilder.extend({
 
     this.addNode("Toggle mouseover events", () => {
       this.g.config.set("registerMouseHover", !this.g.config.get("registerMouseHover"));
-      return this.g.onAll(function() {
+      return this.g.onAll(function () {
         return console.log(arguments);
       });
     });

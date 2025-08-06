@@ -26,7 +26,7 @@ const MenuBuilder = view.extend({
   setName: function (name) {
     this.name = name;
   },
-  addNode: function (label, callback, opts) {
+  addNode: function (label, callback, opts, prefix) {
     let style;
     if (opts != null) {
       style = opts.style;
@@ -46,7 +46,8 @@ const MenuBuilder = view.extend({
     this._nodes.push({
       label: label,
       callback: callback,
-      style: style
+      style: style,
+      prefix: prefix,
     });
   },
 

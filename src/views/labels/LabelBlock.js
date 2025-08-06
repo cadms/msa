@@ -45,10 +45,6 @@ const View = boneView.extend({
   render: function () {
     this.renderSubviews();
     this.el.className = "biojs_msa_labelblock";
-    this.el.style.display = "inline-block";
-    this.el.style.verticalAlign = "top";
-    this.el.style.overflowY = "auto";
-    this.el.style.overflowX = "hidden";
     this.el.style.fontSize = `${this.g.zoomer.get('labelFontsize')}px`;
     this.el.style.lineHeight = `${this.g.zoomer.get("labelLineHeight")}`;
     this._setHeight();
