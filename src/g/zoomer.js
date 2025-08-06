@@ -3,17 +3,17 @@ var Model = require("backbone-thin").Model;
 // pixel properties for some components
 module.exports = Zoomer = Model.extend({
 
-  constructor: function(attributes,options) {
+  constructor: function (attributes, options) {
     this.calcDefaults(options.model);
     Model.apply(this, arguments);
     this.g = options.g;
 
     // events
-    this.listenTo( this, "change:labelIdLength change:labelNameLength change:labelPartLength change:labelCheckLength", (function() {
+    this.listenTo(this, "change:labelIdLength change:labelNameLength change:labelPartLength change:labelCheckLength", (function () {
       return this.trigger("change:labelWidth", this.getLabelWidth());
     }), this
     );
-    this.listenTo( this, "change:metaLinksWidth change:metaIdentWidth change:metaGapWidth", (function() {
+    this.listenTo(this, "change:metaLinksWidth change:metaIdentWidth change:metaGapWidth", (function () {
       return this.trigger("change:metaWidth", this.getMetaWidth());
     }), this
     );
@@ -32,7 +32,8 @@ module.exports = Zoomer = Model.extend({
 
     // labels
     labelIdLength: 20,
-    labelNameLength: 100,
+    labelNameLength: 150,
+    labelComparisonLength: 70,
     labelPartLength: 15,
     labelCheckLength: 15,
     labelFontsize: 13,
@@ -64,10 +65,10 @@ module.exports = Zoomer = Model.extend({
     // internal props
     _alignmentScrollLeft: 0,
     _alignmentScrollTop: 0
-    },
+  },
 
   // sets some defaults, depending on the model
-  calcDefaults: function(model) {
+  calcDefaults: function (model) {
     var maxLen = model.getMaxLength();
     if (maxLen < 200 && model.length < 30) {
       this.defaults.boxRectWidth = this.defaults.boxRectHeight = 5;
@@ -76,7 +77,7 @@ module.exports = Zoomer = Model.extend({
   },
 
   // @param n [int] maxLength of all seqs
-  getAlignmentWidth: function(n) {
+  getAlignmentWidth: function (n) {
     if (this.get("autoResize") && n !== undefined) {
       return this.get("columnWidth") * n;
     }
@@ -88,7 +89,7 @@ module.exports = Zoomer = Model.extend({
   },
 
   // @param n [int] number of residues to scroll to the right
-  setLeftOffset: function(n) {
+  setLeftOffset: function (n) {
     var val = (n);
     val = Math.max(0, val);
     val -= this.g.columns.calcHiddenColumns(val);
@@ -96,46 +97,49 @@ module.exports = Zoomer = Model.extend({
   },
 
   // @param n [int] row that should be on top
-  setTopOffset: function(n) {
+  setTopOffset: function (n) {
     var val = Math.max(0, (n - 1));
     var height = 0;
     for (var i = 0; 0 < val ? i <= val : i >= val; 0 < val ? i++ : i--) {
       var seq = this.model.at(i);
       height += seq.attributes.height || 1;
     }
-    return this.set("_alignmentScrollTop",height * this.get("rowHeight"));
+    return this.set("_alignmentScrollTop", height * this.get("rowHeight"));
   },
 
   // length of all elements left to the main sequence body: labels, metacell, ..
-  getLeftBlockWidth: function() {
-     var paddingLeft = 0;
-     if (this.g.vis.get("labels")) { paddingLeft += this.getLabelWidth(); }
-     if (this.g.vis.get("metacell")) { paddingLeft += this.getMetaWidth(); }
-     //paddingLeft += 15 # scroll bar
-     return paddingLeft;
+  getLeftBlockWidth: function () {
+    var paddingLeft = 0;
+    if (this.g.vis.get("labels")) { paddingLeft += this.getLabelWidth(); }
+    if (this.g.vis.get("metacell")) { paddingLeft += this.getMetaWidth(); }
+    //paddingLeft += 15 # scroll bar
+    return paddingLeft;
   },
 
-  getMetaWidth: function() {
-     var val = 0;
-     if (this.g.vis.get("metaGaps")) { val += this.get("metaGapWidth"); }
-     if (this.g.vis.get("metaIdentity")) { val += this.get("metaIdentWidth"); }
-     if (this.g.vis.get("metaLinks")) { val += this.get("metaLinksWidth"); }
-     return val;
+  getMetaWidth: function () {
+    var val = 0;
+    if (this.g.vis.get("metaGaps")) { val += this.get("metaGapWidth"); }
+    if (this.g.vis.get("metaIdentity")) { val += this.get("metaIdentWidth"); }
+    if (this.g.vis.get("metaLinks")) { val += this.get("metaLinksWidth"); }
+    return val;
   },
 
-  getLabelWidth: function() {
-     var val = 0;
-     if (this.g.vis.get("labelName")) { val += this.get("labelNameLength"); }
-     if (this.g.vis.get("labelId")) { val += this.get("labelIdLength"); }
-     if (this.g.vis.get("labelPartition")) { val += this.get("labelPartLength"); }
-     if (this.g.vis.get("labelCheckbox")) { val += this.get("labelCheckLength"); }
-     return val;
+  getLabelWidth: function () {
+    var val = 0;
+    if (this.g.vis.get("labelName")) { val += this.get("labelNameLength"); }
+    if (this.g.vis.get("labelId")) { val += this.get("labelIdLength"); }
+    if (this.g.vis.get("numMatch")) { val += this.g.zoomer.get("labelComparisonLength") }
+    if (this.g.vis.get("numDiff")) { val += this.g.zoomer.get("labelComparisonLength") }
+
+    if (this.g.vis.get("labelPartition")) { val += this.get("labelPartLength"); }
+    if (this.g.vis.get("labelCheckbox")) { val += this.get("labelCheckLength"); }
+    return val;
   },
 
-  _adjustWidth: function() {
+  _adjustWidth: function () {
     if (!(this.el !== undefined && this.model !== undefined)) { return; }
 
-    var calcWidth = this.getAlignmentWidth( this.model.getMaxLength() - this.g.columns.get('hidden').length);
+    var calcWidth = this.getAlignmentWidth(this.model.getMaxLength() - this.g.columns.get('hidden').length);
 
     let val
     if (this.g.config.get("shouldRenderSeqBlockAsSvg") === true) {
@@ -153,25 +157,25 @@ module.exports = Zoomer = Model.extend({
 
       // TODO: dirty hack
       var maxWidth = parentWidth - this.getLeftBlockWidth();
-      val = Math.min(maxWidth,calcWidth);
+      val = Math.min(maxWidth, calcWidth);
     }
 
     // round to a valid AA box
-    val = Math.floor( val / this.get("columnWidth")) * this.get("columnWidth");
+    val = Math.floor(val / this.get("columnWidth")) * this.get("columnWidth");
 
     //@set "alignmentWidth", val
     this.set("alignmentWidth", val)
     return val;
   },
 
-  autoResize: function() {
+  autoResize: function () {
     if (this.get("autoResize")) {
       return this._adjustWidth(this.el, this.model);
     }
   },
 
   // max is the maximal allowed height
-  autoHeight: function(max) {
+  autoHeight: function (max) {
     // TODO!
     // make seqlogo height configurable
     var val = this.getMaxAlignmentHeight();
@@ -182,13 +186,13 @@ module.exports = Zoomer = Model.extend({
     return this.set("alignmentHeight", val);
   },
 
-  setEl: function(el, model) {
+  setEl: function (el, model) {
     this.el = el;
     return this.model = model;
   },
 
   // updates both scroll properties (if needed)
-  _checkScrolling: function(scrollObj, opts) {
+  _checkScrolling: function (scrollObj, opts) {
     var xScroll = scrollObj[0];
     var yScroll = scrollObj[1];
 
@@ -196,16 +200,16 @@ module.exports = Zoomer = Model.extend({
     return this.set("_alignmentScrollTop", yScroll, opts);
   },
 
-  getMaxAlignmentHeight: function() {
+  getMaxAlignmentHeight: function () {
     var height = 0;
-    this.model.each(function(seq) {
+    this.model.each(function (seq) {
       return height += seq.attributes.height || 1;
     });
 
     return (height * this.get("rowHeight"));
   },
 
-  getMaxAlignmentWidth: function() {
+  getMaxAlignmentWidth: function () {
     return this.model.getMaxLength() * this.get("columnWidth");
   }
 });

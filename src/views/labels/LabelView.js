@@ -3,14 +3,14 @@ const dom = require("dom-helper");
 
 const LabelView = view.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.seq = data.seq;
     this.g = data.g;
 
     return this.manageEvents();
   },
 
-  manageEvents: function() {
+  manageEvents: function () {
     var events = {};
     if (this.g.config.get("registerMouseClicks")) {
       events.click = "_onclick";
@@ -23,17 +23,16 @@ const LabelView = view.extend({
     this.listenTo(this.g.config, "change:registerMouseHover", this.manageEvents);
     this.listenTo(this.g.config, "change:registerMouseClick", this.manageEvents);
     this.listenTo(this.g.vis, "change:labelName change:labelId change:labelPartition change:labelCheckbox", this.render);
-    this.listenTo( this.g.zoomer, "change:labelIdLength change:labelNameLength change:labelPartLength change:labelCheckLength", this.render
+    this.listenTo(this.g.zoomer, "change:labelIdLength change:labelNameLength change:labelPartLength change:labelCheckLength", this.render
     );
-    return this.listenTo( this.g.zoomer, "change:labelFontSize change:labelLineHeight change:labelWidth change:rowHeight", this.render
+    return this.listenTo(this.g.zoomer, "change:labelFontSize change:labelLineHeight change:labelWidth change:rowHeight", this.render
     );
   },
 
-  render: function() {
+  render: function () {
     dom.removeAllChilds(this.el);
 
     this.el.style.width = `${this.g.zoomer.getLabelWidth()}px`;
-    //@el.style.height = "#{@g.zoomer.get "rowHeight"}px"
     this.el.setAttribute("class", "biojs_msa_labels");
 
     if (this.g.vis.get("labelCheckbox")) {
@@ -41,13 +40,13 @@ const LabelView = view.extend({
       checkBox.setAttribute("type", "checkbox");
       checkBox.value = this.model.get('id');
       checkBox.name = "seq";
-      checkBox.style.width= this.g.zoomer.get("labelCheckLength") + "px";
+      checkBox.style.width = this.g.zoomer.get("labelCheckLength") + "px";
       this.el.appendChild(checkBox);
     }
 
     if (this.g.vis.get("labelId")) {
       var id = document.createElement("span");
-      var val  = this.model.get("id");
+      var val = this.model.get("id");
       if (!isNaN(val)) {
         val++;
       }
@@ -60,7 +59,7 @@ const LabelView = view.extend({
 
     if (this.g.vis.get("labelPartition")) {
       var part = document.createElement("span");
-      part.style.width= this.g.zoomer.get("labelPartLength") + "px";
+      part.style.width = this.g.zoomer.get("labelPartLength") + "px";
       const textContent = this.model.get("partition");
       part.textContent = textContent;
       part.style.display = "inline-block";
@@ -73,12 +72,40 @@ const LabelView = view.extend({
       var name = document.createElement("span");
       const textContent = this.model.get("name");
       name.textContent = textContent;
+      name.style.display = "inline-block";
+
       if (this.model.get("ref") && this.g.config.get("hasRef")) {
         name.style.fontWeight = "bold";
       }
-      name.style.width= this.g.zoomer.get("labelNameLength") + "px";
+      name.style.width = this.g.zoomer.get("labelNameLength") + "px";
       this.el.appendChild(name);
       this.el.setAttribute("title", textContent)
+    }
+
+    if (this.g.vis.get("numMatch")) {
+      var match = document.createElement("span");
+      match.setAttribute("class", "match_label");
+      match.style.display = "inline-block";
+
+
+      if (this.model.get("ref") && this.g.config.get("hasRef")) {
+        match.style.fontWeight = "bold";
+      }
+      match.style.width = "70px";
+      this.el.appendChild(match);
+    }
+
+    if (this.g.vis.get("numDiff")) {
+      var diff = document.createElement("span");
+      diff.setAttribute("class", "diff_label");
+      diff.style.display = "inline-block";
+
+
+      if (this.model.get("ref") && this.g.config.get("hasRef")) {
+        diff.style.fontWeight = "bold";
+      }
+      diff.style.width = "70px";
+      this.el.appendChild(diff);
     }
 
     this.el.style.overflow = scroll;
@@ -86,19 +113,19 @@ const LabelView = view.extend({
     return this;
   },
 
-  _onclick: function(evt) {
+  _onclick: function (evt) {
     var seqId = this.model.get("id");
-    return this.g.trigger("row:click", {seqId:seqId, evt:evt});
+    return this.g.trigger("row:click", { seqId: seqId, evt: evt });
   },
 
-  _onmousein: function(evt) {
+  _onmousein: function (evt) {
     var seqId = this.model.get("id");
-    return this.g.trigger("row:mouseout", {seqId:seqId, evt:evt});
+    return this.g.trigger("row:mouseout", { seqId: seqId, evt: evt });
   },
 
-  _onmouseout: function(evt) {
+  _onmouseout: function (evt) {
     var seqId = this.model.get("id");
-    return this.g.trigger("row:mouseout", {seqId:seqId, evt:evt});
+    return this.g.trigger("row:mouseout", { seqId: seqId, evt: evt });
   }
 });
 
