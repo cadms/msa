@@ -44,7 +44,6 @@ const OrderingMenu = MenuBuilder.extend({
       style.backgroundColor = "#5FA2DD";
       style.color = "#FFFFFF";
     }
-    // return this.addNode('<div>TEST</div>');
     return this.addNode(text, (() => {
       if ((m.precode != null)) { m.precode(); }
       this.model.comparator = m.comparator;

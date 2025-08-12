@@ -20,7 +20,6 @@ const MenuView = boneView.extend({
     if (!data.msa) {
       throw new Error("No msa instance provided. Please provide .msa");
     }
-    console.log(data);
     this.msa = data.msa;
 
     // add menu config to the global object

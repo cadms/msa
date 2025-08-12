@@ -5,7 +5,8 @@ var Model = require("backbone-thin").Model;
 module.exports = Config = Model.extend({
 
   defaults:
-    {registerMouseHover: false,
+  {
+    registerMouseHover: false,
     registerMouseClicks: true,
     importProxy: "https://cors-anywhere.herokuapp.com/",
     importProxyStripHttp: true,
@@ -15,6 +16,6 @@ module.exports = Config = Model.extend({
     debug: false,
     hasRef: false, // hasReference
     bootstrapMenu: false,
-    manualRendering: false // not recommended to turn on
-    }
+    manualRendering: false // not recommended to turn on,
+  }
 });

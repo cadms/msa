@@ -20,9 +20,10 @@ const SelectionManager = Collection.extend({
       });
 
       this.listenTo(this.g, "row:click", function (e) {
-        return this._handleEl(e.evt, new rowsel({
+        this._handleEl(e.evt, new rowsel({
           seqId: e.seqId
         }));
+        return this.renderComparisonColumns();
       });
 
       return this.listenTo(this.g, "column:click", function (e) {
@@ -200,42 +201,77 @@ const SelectionManager = Collection.extend({
     return this.reset(s);
   },
 
+
+  renderComparisonColumns: function () {
+    const hiddenColumnIds = this.g.columns.get('hidden');
+    const models = this.g.seqs.models
+      .filter(m => !m.changed.hidden);
+    const selectedRowSeqIds = this.models
+      .filter(m => m.get('type') === 'row')
+      .map(m => m.get('seqId'));
+
+    if (!selectedRowSeqIds.length) {
+      const matchLabels = document.querySelectorAll(".biojs_msa_labels .match_label");
+      const diffLabels = document.querySelectorAll(".biojs_msa_labels .diff_label");
+
+      for (let i = 0; i < matchLabels.length; i++) {
+        const el = matchLabels[i];
+        el.textContent = ''
+        el.setAttribute("title", '')
+      }
+
+      for (let i = 0; i < diffLabels.length; i++) {
+        const el = diffLabels[i];
+        el.textContent = ''
+        el.setAttribute("title", '')
+      }
+      return;
+    };
+    const selectionId = selectedRowSeqIds[0];
+
+    console.log(selectionId);
+    const selectedModel = models.find(m => m.get("id") === selectionId);
+
+    const selectedSeq = selectedModel.get('seq');
+
+    const matches = [];
+
+    models.forEach(element => {
+      let matchCount = 0;
+      const seq = element.get('seq');
+      for (let i = 0; i < seq.length; i++) {
+        if (hiddenColumnIds.includes(i)) continue;
+
+        if (seq[i] === selectedSeq[i]) {
+          matchCount++;
+        }
+      }
+      matches.push(matchCount);
+    });
+    const matchLabels = document.querySelectorAll(".biojs_msa_labels .match_label");
+    const diffLabels = document.querySelectorAll(".biojs_msa_labels .diff_label");
+
+    for (let i = 0; i < matchLabels.length; i++) {
+      const el = matchLabels[i];
+      el.textContent = `${matches[i]}/${models[i].attributes.seq.length - hiddenColumnIds.length}`
+      el.setAttribute("title", el.textContent)
+    }
+
+    for (let i = 0; i < diffLabels.length; i++) {
+      const el = diffLabels[i];
+      const diff = models[i].attributes.seq.length - hiddenColumnIds.length - matches[i];
+      el.textContent = `${diff}/${models[i].attributes.seq.length - hiddenColumnIds.length}`
+
+      el.setAttribute("title", el.textContent)
+    }
+  },
+
   // method to decide whether to start a new selection
   // or append to the old one (depending whether CTRL was pressed)
   _handleEl: function (e, selection) {
     if (selection.get("type") === "row") {
       const selectedRowSeqIds = this.models.map(m => m.get("seqId"))
       const selectionId = selection.get("seqId")
-
-      const selectedSeq = this.g.seqs.models[selectionId].attributes.seq;
-      const matches = [];
-
-      this.g.seqs.models.forEach(element => {
-        let matchCount = 0;
-        const seq = element.attributes.seq;
-        for (let i = 0; i < seq.length; i++) {
-          if (seq[i] === selectedSeq[i]) {
-            matchCount++;
-          }
-        }
-        matches.push(matchCount);
-      });
-      const matchLabels = document.querySelectorAll(".biojs_msa_labels .match_label");
-      const diffLabels = document.querySelectorAll(".biojs_msa_labels .diff_label");
-
-      for (let i = 0; i < matchLabels.length; i++) {
-        const el = matchLabels[i];
-        el.textContent = `${matches[i]}/${this.g.seqs.models[i].attributes.seq.length}`
-        el.setAttribute("title", el.textContent)
-      }
-
-      for (let i = 0; i < diffLabels.length; i++) {
-        const el = diffLabels[i];
-        const diff = this.g.seqs.models[i].attributes.seq.length - matches[i];
-        el.textContent = `${diff}/${this.g.seqs.models[i].attributes.seq.length}`
-
-        el.setAttribute("title", el.textContent)
-      }
 
       if (e.ctrlKey || e.metaKey) {
         if (selectedRowSeqIds.includes(selectionId)) {

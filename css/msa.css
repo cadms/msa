@@ -45,6 +45,15 @@
   height: 100%;
 }
 
+.biojs_msa_labelrow:nth-child(odd) {
+  background-color: white;
+}
+
+.biojs_msa_labelrow:nth-child(even) {
+  background-color: #e6e6e6;
+  /* light gray */
+}
+
 .biojs_msa_labelblock::-webkit-scrollbar,
 .biojs_msa_rheader::-webkit-scrollbar {
   /* FIX scrollbars on Mac */
@@ -143,8 +152,8 @@
 }
 
 .dropdown-menu {
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(30px);
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 12px;

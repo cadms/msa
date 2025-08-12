@@ -21,6 +21,7 @@ const View = boneView.extend({
   draw: function () {
     this.removeViews();
     console.log("redraw columns", this.model.length);
+
     for (var i = 0; i < this.model.length; i++) {
       if (this.model.at(i).get('hidden')) { continue; }
       var view = new LabelRowView({ model: this.model.at(i), g: this.g });
@@ -43,11 +44,17 @@ const View = boneView.extend({
   },
 
   render: function () {
+    console.log('render');
     this.renderSubviews();
     this.el.className = "biojs_msa_labelblock";
     this.el.style.fontSize = `${this.g.zoomer.get('labelFontsize')}px`;
     this.el.style.lineHeight = `${this.g.zoomer.get("labelLineHeight")}`;
     this._setHeight();
+
+    setTimeout(() => {
+      this.g.selcol.renderComparisonColumns();
+    }, 50);
+
     return this;
   },
 
