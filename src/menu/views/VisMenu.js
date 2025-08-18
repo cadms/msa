@@ -16,8 +16,13 @@ const VisMenu = MenuBuilder.extend({
     var visElements = this.getVisElements();
     for (var i = 0, visEl; i < visElements.length; i++) {
       visEl = visElements[i];
+      if (visEl.id == 'markers') {
+        this.addDivider();
+      }
       this._addVisEl(visEl);
     }
+
+    this.addDivider();
 
     // other
     this.addNode("Reset", () => {
@@ -67,6 +72,7 @@ const VisMenu = MenuBuilder.extend({
     var vis = [];
     //vis.push name: "Sequences", id: "sequences"
     vis.push({ name: "conservation weights", id: "conserv" });
+
     vis.push({ name: "meta info (Gaps/Ident)", id: "metacell" });
     // vis.push({name: "overview panel", id: "overviewbox"});
     vis.push({ name: "sequence logo", id: "seqlogo" });

@@ -4,11 +4,53 @@ const FilterMenu = MenuBuilder.extend({
 
   initialize: function (data) {
     this.g = data.g;
+
     return this.el.style.display = "inline-block";
   },
 
   render: function () {
-    this.setName("Filter");
+    this.setName("Filters");
+    const hasSavedFilters = this.g.cfg.filters && Object.keys(this.g.cfg.filters).length !== 0;
+
+    this.addNode("Save Filter as...", () => {
+      Ext.GlobalEvents.fireEvent('save_filter', this.g.columns.get('hidden'), () => {
+        this._nodes = [];
+        this.$el.empty();
+        this.render();
+      });
+    });
+
+    this.addNode(hasSavedFilters ? "Filters" : "Filters (none)", null, {
+      disabled: !hasSavedFilters,
+      children: hasSavedFilters && Object.entries(this.g.cfg.filters).map(([key, value]) => {
+        return {
+          label: key,
+          callback: () => {
+            this.g.columns.set("hidden", value);
+            Ext.toast({
+              title: `Filter Set`,
+              html: `Filter "${key}" has been set.`,
+
+              width: 300,
+              align: 'br'
+            });
+          },
+          trailingIcon: {
+            className: "fa x-tool-close",
+            title: "Delete item",
+            onclick: () => {
+              Ext.GlobalEvents.fireEvent('delete_filter', key, () => {
+                this._nodes = [];
+                this.$el.empty();
+                this.render();
+              });
+            }
+          },
+        };
+      })
+    });
+
+    this.addDivider();
 
     this.addNode("Find Motif (supports RegEx)", () => {
       let search = prompt("your search", "D");
@@ -36,21 +78,7 @@ const FilterMenu = MenuBuilder.extend({
 
     });
 
-    this.addNode("Hide columns by conserv threshold", (e) => {
-      let threshold = prompt("Enter threshold (in percent)", 20);
-      threshold = threshold / 100;
-      const maxLen = this.model.getMaxLength();
-      const hidden = [];
-      // TODO: cache this value
-      const conserv = this.g.stats.scale(this.g.stats.conservation());
-      const end = maxLen - 1;
-      for (let i = 0; i <= end; i++) {
-        if (conserv[i] < threshold) {
-          hidden.push(i);
-        }
-      }
-      return this.g.columns.set("hidden", hidden);
-    });
+    this.addDivider();
 
     this.addNode("Hide columns by selection", () => {
       const hiddenOld = this.g.columns.get("hidden");
@@ -84,17 +112,20 @@ const FilterMenu = MenuBuilder.extend({
       return this.g.columns.set("hidden", hidden);
     });
 
-    this.addNode("Hide seqs by identity", () => {
+    this.addNode("Hide columns by conserv threshold", (e) => {
       let threshold = prompt("Enter threshold (in percent)", 20);
       threshold = threshold / 100;
-      // const identityArr = this.g.stats.identity()
-      // const filtered = this.model.filter(el => identityArr[el.id] < threshold) 
-      // return this.model.remove(filtered)
-      return this.model.each((el) => {
-        if (this.g.stats.identity()[el.id] < threshold) {
-          return el.set('hidden', true);
+      const maxLen = this.model.getMaxLength();
+      const hidden = [];
+      // TODO: cache this value
+      const conserv = this.g.stats.scale(this.g.stats.conservation());
+      const end = maxLen - 1;
+      for (let i = 0; i <= end; i++) {
+        if (conserv[i] < threshold) {
+          hidden.push(i);
         }
-      });
+      }
+      return this.g.columns.set("hidden", hidden);
     });
 
     this.addNode("Hide seqs by selection", () => {
@@ -120,6 +151,22 @@ const FilterMenu = MenuBuilder.extend({
       });
     });
 
+    this.addNode("Hide seqs by identity", () => {
+      let threshold = prompt("Enter threshold (in percent)", 20);
+      threshold = threshold / 100;
+      // const identityArr = this.g.stats.identity()
+      // const filtered = this.model.filter(el => identityArr[el.id] < threshold) 
+      // return this.model.remove(filtered)
+      return this.model.each((el) => {
+        if (this.g.stats.identity()[el.id] < threshold) {
+          return el.set('hidden', true);
+        }
+      });
+    });
+
+    this.addDivider();
+
+
     this.addNode("Reset", () => {
       this.g.columns.set("hidden", []);
       this.g.user.set("searchText", null)
@@ -132,6 +179,6 @@ const FilterMenu = MenuBuilder.extend({
 
     this.el.appendChild(this.buildDOM());
     return this;
-  }
+  },
 });
 export default FilterMenu;

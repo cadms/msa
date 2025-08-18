@@ -48,6 +48,17 @@ const MenuBuilder = view.extend({
       callback: callback,
       style: style,
       prefix: prefix,
+      children: opts && opts.children,
+    });
+  },
+
+  addDivider: function () {
+    if (this._nodes == null) {
+      this._nodes = [];
+    }
+
+    this._nodes.push({
+      type: 'divider'
     });
   },
 
@@ -101,9 +112,23 @@ const MenuBuilder = view.extend({
     menuUl.setAttribute('aria-labelledby', name.replace(/\s+/g, '') + "DropDown");
     menuUl.style.display = "none";
 
-    // currently we support one-level
     for (let i = 0, _len = nodes.length; i < _len; i++) {
       node = nodes[i];
+
+      if (node.type === 'divider') {
+        const hr = document.createElement("div");
+        hr.className = "dropdown-divider";
+        menuUl.appendChild(hr);
+        continue;
+      }
+
+      if (node.children) {
+        this._buildM({
+          nodes: node.children,
+          name: name,
+        });
+      }
+
       li = document.createElement("li");
       li.className = "dropdown-item";
       li.textContent = node.label;

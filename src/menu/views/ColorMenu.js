@@ -48,6 +48,10 @@ const ColorMenu = MenuBuilder.extend({
       style.color = "#FFFFFF";
     }
 
+    if (scheme.id == 'buried') {
+      this.addDivider();
+    }
+
     return this.addNode(scheme.name, () => {
       this.g.colorscheme.set("scheme", scheme.id)
     }, {
