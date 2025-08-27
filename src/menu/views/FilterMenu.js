@@ -10,7 +10,7 @@ const FilterMenu = MenuBuilder.extend({
 
   render: function () {
     this.setName("Filters");
-    const hasSavedFilters = this.g.cfg.filters && Object.keys(this.g.cfg.filters).length !== 0;
+    const hasSavedFilters = this.g.cfg && this.g.cfg.filters && Object.keys(this.g.cfg.filters).length !== 0;
 
     this.addNode("Save Filter as...", () => {
       Ext.GlobalEvents.fireEvent('save_filter', this.g.columns.get('hidden'), () => {
