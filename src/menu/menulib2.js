@@ -106,7 +106,14 @@ const MenuBuilder = view.extend({
 
             const li = document.createElement("li");
             li.className = node.disabled ? "dropdown-item disabled" : "dropdown-item";
-            li.textContent = node.label;
+
+            const text = document.createElement("span");;
+            text.textContent = node.label;
+            text.style.lineHeight = 1.2;
+            text.style.width = "100%";
+            text.style.textOverflow = "ellipsis";
+            text.style.overflow = "hidden"
+            li.appendChild(text);
 
             // Apply style
             if (node.style) {

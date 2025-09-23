@@ -333,8 +333,9 @@
 }
 
 .dropdown-item {
+  align-items: center;
   border-radius: 6px;
-  display: block;
+  display: flex;
   padding: 0.2rem 0.75rem;
   clear: both;
   font-weight: 400;
@@ -367,6 +368,7 @@
   position: absolute;
   display: none;
   margin-top: -5px;
+  max-width: 250px;
 }
 
 .dropdown-item:hover,

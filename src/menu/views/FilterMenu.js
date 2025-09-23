@@ -10,8 +10,7 @@ const FilterMenu = MenuBuilder.extend({
 
   render: function () {
     this.setName("Filters");
-    const hasSavedFilters = this.g.cfg && this.g.cfg.filters && Object.keys(this.g.cfg.filters).length !== 0;
-
+    const hasSavedFilters = this.g.alignmentFilters && this.g.alignmentFilters.length !== 0;
     this.addNode("Save Filter as...", () => {
       Ext.GlobalEvents.fireEvent('save_filter', this.g.columns.get('hidden'), () => {
         this._nodes = [];
@@ -22,14 +21,15 @@ const FilterMenu = MenuBuilder.extend({
 
     this.addNode(hasSavedFilters ? "Filters" : "Filters (none)", null, {
       disabled: !hasSavedFilters,
-      children: hasSavedFilters && Object.entries(this.g.cfg.filters).map(([key, value]) => {
+      children: hasSavedFilters && this.g.alignmentFilters.map((filter, index) => {
+
         return {
-          label: key,
+          label: filter.name,
           callback: () => {
-            this.g.columns.set("hidden", value);
+            this.g.columns.set("hidden", filter.hidden_columns);
             Ext.toast({
               title: `Filter Set`,
-              html: `Filter "${key}" has been set.`,
+              html: `Filter "${filter.name}" has been set.`,
 
               width: 300,
               align: 'br'
@@ -39,7 +39,7 @@ const FilterMenu = MenuBuilder.extend({
             className: "fa x-tool-close",
             title: "Delete item",
             onclick: () => {
-              Ext.GlobalEvents.fireEvent('delete_filter', key, () => {
+              Ext.GlobalEvents.fireEvent('delete_filter', filter.id, () => {
                 this._nodes = [];
                 this.$el.empty();
                 this.render();
