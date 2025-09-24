@@ -4,7 +4,8 @@ var Model = require("backbone-thin").Model;
 // visible areas
 module.exports = Visibility = Model.extend({
 
-  defaults: {sequences: true,
+  defaults: {
+    sequences: true,
     markers: true,
     metacell: false,
     conserv: false,
@@ -18,6 +19,8 @@ module.exports = Visibility = Model.extend({
     labels: true,
     labelName: true,
     labelId: true,
+    numMatch: true,
+    numDiff: true,
     labelPartition: false,
     labelCheckbox: false,
 
@@ -25,32 +28,32 @@ module.exports = Visibility = Model.extend({
     metaGaps: true,
     metaIdentity: true,
     metaLinks: true
-    },
+  },
 
-  constructor: function(attributes,options) {
+  constructor: function (attributes, options) {
     this.calcDefaults(options.model);
     return Model.apply(this, arguments);
   },
 
-  initialize: function() {
+  initialize: function () {
 
-    this.listenTo( this, "change:metaLinks change:metaIdentity change:metaGaps", (function() {
+    this.listenTo(this, "change:metaLinks change:metaIdentity change:metaGaps", (function () {
       return this.trigger("change:metacell");
     }), this
     );
 
-    this.listenTo( this, "change:labelName change:labelId change:labelPartition change:labelCheckbox", (function() {
+    this.listenTo(this, "change:labelName change:labelId change:numMatch change:numDiff change:labelPartition change:labelCheckbox", (function () {
       return this.trigger("change:labels");
     }), this
     );
 
-    return this.listenTo( this,"change:markers change:conserv change:seqlogo change:gapHeader", (function() {
+    return this.listenTo(this, "change:markers change:conserv change:seqlogo change:gapHeader", (function () {
       return this.trigger("change:header");
     }), this
     );
   },
 
-  calcDefaults: function(seqs) {
+  calcDefaults: function (seqs) {
     if (seqs.length > 0) {
       var seq = seqs.at(0);
       var ids = seq.get("ids");

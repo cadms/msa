@@ -27,6 +27,9 @@ const VisMenu = MenuBuilder.extend({
       this.g.vis.set("conserv", false);
       this.g.vis.set("labelId", true);
       this.g.vis.set("labelName", true);
+      this.g.vis.set("numMatch", true);
+      this.g.vis.set("numDiff", true);
+
       // this.g.vis.set("labelCheckbox", false);
       this.g.vis.set("seqlogo", false);
       this.g.vis.set("gapHeader", false);
@@ -74,6 +77,7 @@ const VisMenu = MenuBuilder.extend({
     vis.push({ name: "ID/Label", id: "labels" });
     vis.push({ name: "Label", id: "labelName" });
     vis.push({ name: "ID", id: "labelId" });
+
     //vis.push name: "Label checkbox", id: "labelCheckbox"
     vis.push({ name: "gaps %", id: "metaGaps" });
     // vis.push({name: "identity score", id: "metaIdentity"});

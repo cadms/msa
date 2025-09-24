@@ -52,8 +52,16 @@ const LabelHeader = view.extend({
     }
 
     if (this.g.vis.get("labelName")) {
-      var name = this.addEl("Label");
+      var name = this.addEl("Label", this.g.zoomer.get("labelNameLength"));
       labelHeader.appendChild(name);
+    }
+
+    if (this.g.vis.get("numMatch")) {
+      labelHeader.appendChild(this.addEl("# Match", this.g.zoomer.get("labelComparisonLength")));
+    }
+
+    if (this.g.vis.get("numDiff")) {
+      labelHeader.appendChild(this.addEl("# Diff", this.g.zoomer.get("labelComparisonLength")));
     }
 
     return labelHeader;
@@ -66,6 +74,8 @@ const LabelHeader = view.extend({
       id.style.width = width + "px";
     }
     id.style.display = "inline-block";
+    id.style.overflow = "hidden";
+
     return id;
   },
 
