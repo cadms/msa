@@ -37,6 +37,8 @@ const OrderingMenu = MenuBuilder.extend({
 
   _addNode(m) {
     var text = m.text;
+    var prefix = m.prefix;
+
     var style = {};
     if (text === this.order) {
       style.backgroundColor = "#5FA2DD";
@@ -49,14 +51,15 @@ const OrderingMenu = MenuBuilder.extend({
       return this.setOrder(m.text);
     }
     ), {
-      style: style
+      style: style,
+      prefix: prefix,
     });
   },
 
   getComparators: function () {
     var models = [];
 
-    models.push({ text: "ID " + arrowUp, comparator: "id" });
+    models.push({ text: "ID", comparator: "id", prefix: arrowUp });
 
     models.push({
       text: "ID " + arrowDown, comparator: function (a, b) {
@@ -64,6 +67,7 @@ const OrderingMenu = MenuBuilder.extend({
         return - ("" + a.get("id")).localeCompare("" + b.get("id"), [], { numeric: true });
       }
     });
+
 
     models.push({ text: "Label " + arrowUp, comparator: "name" });
 
@@ -111,7 +115,7 @@ const OrderingMenu = MenuBuilder.extend({
         if (val < 0) { return 1; }
         return 0;
       }
-      ), precode: setIdent
+      ), precode: setGaps
     });
 
     models.push({

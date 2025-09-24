@@ -38,8 +38,7 @@ import ProxyHelper from "./utils/proxy";
 // @param zoomer [Dict] display settings like columnWidth
 const MSA = boneView.extend({
 
-  initialize: function(data) {
-
+  initialize: function (data) {
     if (!(typeof data !== "undefined" && data !== null)) { data = {}; }
     // check for default arrays
     if (!(data.colorscheme != null)) { data.colorscheme = {}; }
@@ -60,16 +59,17 @@ const MSA = boneView.extend({
     // populate it and init the global models
     this.g.config = new Config(data.conf);
     this.g.package = new Package(this.g);
-    this.g.selcol = new SelCol([],{g:this.g});
+    this.g.selcol = new SelCol([], { g: this.g });
     this.g.user = new User();
-    this.g.vis = new Visibility(data.vis, {model: this.seqs});
+    this.g.vis = new Visibility(data.vis, { model: this.seqs });
     this.g.visorder = new VisOrdering(data.visorder);
-    this.g.zoomer = new Zoomer(data.zoomer,{g:this.g, model: this.seqs});
+    this.g.zoomer = new Zoomer(data.zoomer, { g: this.g, model: this.seqs });
 
-    this.g.scale = new StageScale(data.scale, {g: this.g});
+    this.g.scale = new StageScale(data.scale, { g: this.g });
 
     // store config options for plugins
     this.g.conservationConfig = data.conserv;
+    this.g.alignmentFilters = data.alignmentFilters;
 
     // debug mode
     if (window.location.hostname === "localhost") {
@@ -81,7 +81,7 @@ const MSA = boneView.extend({
     // utils
     this.u = {};
     this.u.file = new FileHelper(this);
-    this.u.proxy = new ProxyHelper({g: this.g});
+    this.u.proxy = new ProxyHelper({ g: this.g });
     this.u.tree = new TreeHelper(this);
 
     if (this.g.config.get("eventBus") === true) {
@@ -90,9 +90,10 @@ const MSA = boneView.extend({
 
     if (this.g.config.get("dropImport")) {
       var events =
-        {"dragover": this.dragOver,
+      {
+        "dragover": this.dragOver,
         "drop": this.dropFile
-        };
+      };
       this.delegateEvents(events);
     }
 
@@ -104,7 +105,7 @@ const MSA = boneView.extend({
 
     if (data.bootstrapMenu) {
       // pass menu configuration to defaultmenu
-      if(data.menu){
+      if (data.menu) {
         this.menuConfig = data.menu;
       }
       this.g.config.set("bootstrapMenu", true);
@@ -115,12 +116,12 @@ const MSA = boneView.extend({
     return this.m();
   },
 
-  _loadSeqs: function(data) {
+  _loadSeqs: function (data) {
     // stats
     var pureSeq = this.seqs.pluck("seq");
-    this.g.stats = new Stats(this.seqs, {useGaps: true});
+    this.g.stats = new Stats(this.seqs, { useGaps: true });
     this.g.stats.alphabetSize = this.g.config.get("alphabetSize");
-    this.g.columns = new Columns(data.columns,this.g.stats);  // for action on the columns like hiding
+    this.g.columns = new Columns(data.columns, this.g.stats);  // for action on the columns like hiding
 
     // depending config
     this.g.colorscheme = new Colorator(data.colorscheme, pureSeq, this.g.stats);
@@ -130,12 +131,12 @@ const MSA = boneView.extend({
   },
 
   // proxy to the utility package
-  importURL: function() {
+  importURL: function () {
     return this.u.file.importURL.apply(this.u.file, arguments);
   },
 
   // add models to the msa (convenience)
-  m: function() {
+  m: function () {
     var m = {};
     m.model = require("./model");
     m.selection = require("./g/selection/Selection");
@@ -145,11 +146,11 @@ const MSA = boneView.extend({
     return this.m = m;
   },
 
-  draw: function() {
+  draw: function () {
 
     this.removeViews();
 
-    this.addView("stage",new Stage({model: this.seqs, g: this.g}));
+    this.addView("stage", new Stage({ model: this.seqs, g: this.g }));
     this.$el.addClass("biojs_msa_div");
 
     // bootstraps the menu bar by default -> destroys modularity
@@ -165,10 +166,11 @@ const MSA = boneView.extend({
         wrapperDiv.appendChild(this.el);
       }
 
-      var bootstrapOpts = {el: menuDiv,
+      var bootstrapOpts = {
+        el: menuDiv,
         msa: this,
       };
-      if(this.menuConfig){
+      if (this.menuConfig) {
         bootstrapOpts.menu = this.menuConfig;
       }
       var defMenu = new msa.menu.defaultmenu(bootstrapOpts);
@@ -176,7 +178,7 @@ const MSA = boneView.extend({
     }
 
     return $(window).on("resize", (e) => {
-      var f = function() {
+      var f = function () {
         return this.g.zoomer.autoResize();
       };
       return setTimeout(f.bind(this), 5);
@@ -184,14 +186,14 @@ const MSA = boneView.extend({
     );
   },
 
-  dragOver: function(e) {
+  dragOver: function (e) {
     // prevent the normal browser actions
     e.preventDefault();
     e.target.className = 'hover';
     return false;
   },
 
-  dropFile: function(e) {
+  dropFile: function (e) {
     e.preventDefault();
     var files = e.target.files || e.dataTransfer.files;
     this.u.file.importFiles(files);
@@ -199,7 +201,7 @@ const MSA = boneView.extend({
   },
 
   startEventBus() {
-    var busObjs = ["config", "columns", "colorscheme", "selcol" ,"vis", "visorder", "zoomer"];
+    var busObjs = ["config", "columns", "colorscheme", "selcol", "vis", "visorder", "zoomer"];
     return (() => {
       var result = [];
       for (var i = 0, key; i < busObjs.length; i++) {
@@ -210,20 +212,20 @@ const MSA = boneView.extend({
     })();
   },
 
-  _proxyToG: function(key) {
-    return this.listenTo(this.g[key], "all",function(name,prev,now,opts) {
+  _proxyToG: function (key) {
+    return this.listenTo(this.g[key], "all", function (name, prev, now, opts) {
       // suppress duplicate events
       if (name === "change") { return; }
       // backbone uses the second argument for the next value -> swap
       if ((typeof opts !== "undefined" && opts !== null)) {
-        return this.g.trigger(key + ":" + name,now,prev,opts);
+        return this.g.trigger(key + ":" + name, now, prev, opts);
       } else {
-        return this.g.trigger(key + ":" + name,now,prev);
+        return this.g.trigger(key + ":" + name, now, prev);
       }
     });
   },
 
-  render: function() {
+  render: function () {
     if (this.seqs === undefined || this.seqs.length === 0) {
       console.log("warning. empty seqs.");
     }

@@ -13,7 +13,7 @@ const Drawer = {
     this.updateConfig();
 
     // rects
-    this.ctx.globalAlpha = this.g.colorscheme.get("opacity");
+    this.ctx.globalAlpha = 1;
     this.drawSeqs(function (data) { return this.drawSeq(data, this._drawRect); });
     this.ctx.globalAlpha = 1;
 
@@ -54,7 +54,6 @@ const Drawer = {
     return this.drawSeqs(function (data) { return this.drawRow(data, callback, target); });
   },
 
-  // draws a single row
   drawRow: function (data, callback, target) {
     const rectWidth = this.g.zoomer.get("columnWidth");
     const start = Math.max(0, Math.abs(Math.ceil(- this.g.zoomer.get('_alignmentScrollLeft') / rectWidth)));
@@ -62,8 +61,15 @@ const Drawer = {
 
     const xZero = x - start * rectWidth;
     const yZero = data.yPos;
-    return callback.call(target, { model: data.model, xZero: xZero, yZero: yZero, hidden: data.hidden });
+
+    return callback.call(target, {
+      model: data.model,
+      xZero: xZero,
+      yZero: yZero,
+      hidden: data.hidden
+    });
   },
+
 
   // returns first sequence in the viewport
   // y is the position to start drawing

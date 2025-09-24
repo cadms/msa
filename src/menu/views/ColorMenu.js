@@ -48,6 +48,10 @@ const ColorMenu = MenuBuilder.extend({
       style.color = "#FFFFFF";
     }
 
+    if (scheme.id == 'buried') {
+      this.addDivider();
+    }
+
     return this.addNode(scheme.name, () => {
       this.g.colorscheme.set("scheme", scheme.id)
     }, {
@@ -59,10 +63,16 @@ const ColorMenu = MenuBuilder.extend({
     const consensusSeq = this.g.stats.consensus()
 
     this.g.colorscheme.addDynScheme("mismatch", (letter, info) => {
-      return letter !== consensusSeq[info.pos] ? "red" : "#fff"
+
+      if (letter !== consensusSeq[info.pos]) {
+        return "#5fa2dddd";
+      }
+
+      return info.y % 2 == 0 ? '#fff' : '#e6e6e6';
     })
 
     var schemes = [];
+    schemes.push({ name: "Default", id: "mismatch" });
     schemes.push({ name: "No color", id: "foo" });
     schemes.push({ name: "Buried", id: "buried" });
     schemes.push({ name: "Cinema", id: "cinema" });
@@ -72,7 +82,6 @@ const ColorMenu = MenuBuilder.extend({
     schemes.push({ name: "Hydrophobicity", id: "hydro" });
     schemes.push({ name: "Lesk", id: "lesk" });
     schemes.push({ name: "MAE", id: "mae" });
-    schemes.push({ name: "Mismatch", id: "mismatch" });
     schemes.push({ name: "Nucleotide", id: "nucleotide" });
     schemes.push({ name: "Purine", id: "purine" });
     schemes.push({ name: "PID", id: "pid" });

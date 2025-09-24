@@ -44,7 +44,7 @@ const SelectionMenu = MenuBuilder.extend({
         value: oldVal,
         buttons: Ext.Msg.OKCANCEL,
         scope: this,
-        fn: function(btnText, val) {
+        fn: function (btnText, val) {
 
           // check if the user has clicked on positions that are not in the same seq/row
           function checkSeqId(arr) {
@@ -69,21 +69,10 @@ const SelectionMenu = MenuBuilder.extend({
 
           seq = `${seq.substring(0, startCol)}${val}${seq.substring(endCol + 1)}`
           t.model.at(row).set('seq', seq)
-          
+
         }
       });
 
-    });
-
-    this.addNode("Remove selected seq", () => {
-      const t = this
-      const selcol = t.g.selcol
-      const firstSel = selcol.models[0]
-      const row = firstSel.get('seqId')
-      const removed = t.model.at(row).set('hidden', true)
-
-      this.removed_arr.push(removed)
-      
     });
 
     this.addNode("Rename", () => {
@@ -99,12 +88,27 @@ const SelectionMenu = MenuBuilder.extend({
         value: seqLabel,
         buttons: Ext.Msg.OKCANCEL,
         scope: this,
-        fn: function(btnText, val) {
+        fn: function (btnText, val) {
           if (btnText !== 'ok' || val === '' || val === seqLabel) return
           t.model.at(row).set('name', val)
         }
       });
     });
+
+    this.addDivider();
+
+    this.addNode("Remove selected seq", () => {
+      const t = this
+      const selcol = t.g.selcol
+      const firstSel = selcol.models[0]
+      const row = firstSel.get('seqId')
+      const removed = t.model.at(row).set('hidden', true)
+
+      this.removed_arr.push(removed)
+
+    });
+
+
 
     // this.addNode("Invert columns", () => {
     //   return this.g.selcol.invertCol(((() => {
@@ -126,6 +130,8 @@ const SelectionMenu = MenuBuilder.extend({
     // this.addNode("Invert rows", () => {
     //   return this.g.selcol.invertRow(this.model.pluck("id"));
     // });
+    this.addDivider();
+
     this.addNode("Reset", () => {
       const t = this
       const selcol = t.g.selcol
