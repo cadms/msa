@@ -228,20 +228,24 @@ const SelectionManager = Collection.extend({
       return;
     };
     const selectionId = selectedRowSeqIds[0];
-
-    console.log(selectionId);
     const selectedModel = models.find(m => m.get("id") === selectionId);
-
     const selectedSeq = selectedModel.get('seq');
-
     const matches = [];
+
+    let maxSeqLength = 0;
+    for (let i = 0; i < selectedSeq.length; i++) {
+      if (hiddenColumnIds.includes(i) || selectedSeq[i] === '-') continue;
+      maxSeqLength++;
+    }
+
+    const denominator = this.g.comparisontype == 'strict' ? maxSeqLength : selectedSeq.length;
 
     models.forEach(element => {
       let matchCount = 0;
       const seq = element.get('seq');
       for (let i = 0; i < seq.length; i++) {
         if (hiddenColumnIds.includes(i)) continue;
-
+        if (this.g.comparisontype == 'strict' && (seq[i] === '-' || selectedSeq[i] === '-')) continue;
         if (seq[i] === selectedSeq[i]) {
           matchCount++;
         }
@@ -253,14 +257,14 @@ const SelectionManager = Collection.extend({
 
     for (let i = 0; i < matchLabels.length; i++) {
       const el = matchLabels[i];
-      el.textContent = `${matches[i]}/${models[i].attributes.seq.length - hiddenColumnIds.length}`
+      el.textContent = `${matches[i]}/${denominator}`
       el.setAttribute("title", el.textContent)
     }
 
     for (let i = 0; i < diffLabels.length; i++) {
       const el = diffLabels[i];
-      const diff = models[i].attributes.seq.length - hiddenColumnIds.length - matches[i];
-      el.textContent = `${diff}/${models[i].attributes.seq.length - hiddenColumnIds.length}`
+      const diff = denominator - matches[i];
+      el.textContent = `${diff}/${denominator}`
 
       el.setAttribute("title", el.textContent)
     }

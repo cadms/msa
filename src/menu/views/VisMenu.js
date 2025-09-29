@@ -25,23 +25,26 @@ const VisMenu = MenuBuilder.extend({
     this.addDivider();
 
     // other
-    this.addNode("Reset", () => {
-      this.g.vis.set("labels", true);
-      // this.g.vis.set("sequences", true);
-      this.g.vis.set("metacell", false);
-      this.g.vis.set("conserv", false);
-      this.g.vis.set("labelId", true);
-      this.g.vis.set("labelName", true);
-      this.g.vis.set("numMatch", true);
-      this.g.vis.set("numDiff", true);
+    this.addNode({
+      label: "Reset",
+      callback: () => {
+        this.g.vis.set("labels", true);
+        // this.g.vis.set("sequences", true);
+        this.g.vis.set("metacell", false);
+        this.g.vis.set("conserv", false);
+        this.g.vis.set("labelId", true);
+        this.g.vis.set("labelName", true);
+        this.g.vis.set("numMatch", true);
+        this.g.vis.set("numDiff", true);
 
-      // this.g.vis.set("labelCheckbox", false);
-      this.g.vis.set("seqlogo", false);
-      this.g.vis.set("gapHeader", false);
-      // this.g.vis.set("leftHeader", true);
-      this.g.vis.set("metaGaps", true);
-      // this.g.vis.set("metaIdentity", true);
-      // return this.g.vis.set("metaLinks", true);
+        // this.g.vis.set("labelCheckbox", false);
+        this.g.vis.set("seqlogo", false);
+        this.g.vis.set("gapHeader", false);
+        // this.g.vis.set("leftHeader", true);
+        this.g.vis.set("metaGaps", true);
+        // this.g.vis.set("metaIdentity", true);
+        // return this.g.vis.set("metaLinks", true);
+      }
     });
 
     // TODO: make more efficient
@@ -59,13 +62,14 @@ const VisMenu = MenuBuilder.extend({
       pre = "Show ";
     }
 
-    return this.addNode((pre + visEl.name), (() => {
-      return this.g.vis.set(visEl.id, !this.g.vis.get(visEl.id));
-    }
-    ),
-      {
-        style: style
-      });
+    return this.addNode({
+      label: (pre + visEl.name),
+      callback: (() => {
+        return this.g.vis.set(visEl.id, !this.g.vis.get(visEl.id));
+      }),
+      style: style
+
+    });
   },
 
   getVisElements: function () {

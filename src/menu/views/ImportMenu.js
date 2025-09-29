@@ -28,10 +28,13 @@ const ImportMenu = MenuBuilder.extend({
     var filetypes = "Fasta, Clustal, GFF, Jalview features, Newick";
 
     this.setName("Import");
-    this.addNode("URL", (e) => {
-      var url = prompt("Import files from URL" + "\nSupported file types: " + filetypes);
-      if (url.length > 5) {
-        return this.msa.u.file.importURL(url, function () { });
+    this.addNode({
+      label: "URL",
+      callback: (e) => {
+        var url = prompt("Import files from URL" + "\nSupported file types: " + filetypes);
+        if (url.length > 5) {
+          return this.msa.u.file.importURL(url, function () { });
+        }
       }
     });
     // mass update on zoomer
@@ -42,12 +45,18 @@ const ImportMenu = MenuBuilder.extend({
     //zoomer.boxRectWidth = 2
     //@g.zoomer.set zoomer
 
-    this.addNode("From file " + filetypes, () => {
-      return uploader.click();
+    this.addNode({
+      label: "From file " + filetypes,
+      callback: () => {
+        return uploader.click();
+      }
     });
 
-    this.addNode("Drag & Drop", () => {
-      return alert("Yep. Just drag & drop your file " + filetypes);
+    this.addNode({
+      label: "Drag & Drop",
+      callback: () => {
+        return alert("Yep. Just drag & drop your file " + filetypes);
+      }
     });
 
     this.el.appendChild(this.buildDOM());

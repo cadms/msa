@@ -22,16 +22,6 @@ const ColorMenu = MenuBuilder.extend({
       scheme = colorschemes[i];
       this.addScheme(menuColor, scheme);
     }
-
-    // text = "Background"
-    // if @g.colorscheme.get("colorBackground")
-    //   text = "Hide " + text
-    // else
-    //   text = "Show " + text
-
-    // @addNode text, =>
-    //   @g.colorscheme.set "colorBackground", !@g.colorscheme.get("colorBackground")
-
     this.grey(menuColor);
 
     // TODO: make more efficient
@@ -52,10 +42,14 @@ const ColorMenu = MenuBuilder.extend({
       this.addDivider();
     }
 
-    return this.addNode(scheme.name, () => {
-      this.g.colorscheme.set("scheme", scheme.id)
-    }, {
-      style: style
+    return this.addNode({
+      label: scheme.name,
+      callback: () => {
+        this.g.colorscheme.set("scheme", scheme.id)
+      },
+      opts: {
+        style: style
+      }
     });
   },
 

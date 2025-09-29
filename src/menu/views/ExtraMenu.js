@@ -5,13 +5,13 @@ const xhr = require("xhr");
 
 const ExtraMenu = MenuBuilder.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.el.style.display = "inline-block";
     return this.msa = data.msa;
   },
 
-  render: function() {
+  render: function () {
     this.setName("Extras");
     // var stats = this.g.stats;
     // var msa = this.msa;
@@ -22,13 +22,13 @@ const ExtraMenu = MenuBuilder.extend({
     //     id: 0,
     //     name: "Consensus"
     //   });
-  
-      // TODO: find a better way, removing for now
 
-      // have to increment each seq id by 1 so "rename" and "edit" offsets are correct
-      // this works but has to redraw all columns (takes a while)
+    // TODO: find a better way, removing for now
+
+    // have to increment each seq id by 1 so "rename" and "edit" offsets are correct
+    // this works but has to redraw all columns (takes a while)
     //   stats.mseqs.forEach((m, i) => m.set('id', i + 1)) 
-    
+
     //   this.model.add(seq);
     //   this.model.setRef(seq);
     //   this.model.comparator = function(seq) {
@@ -64,13 +64,16 @@ const ExtraMenu = MenuBuilder.extend({
     //     s.set "branch_length", 2
     //   cbs()
 
-    this.addNode("Jump to a column", () => {
-      var offset = prompt("Column", "20");
-      if (offset <= 0 || offset > this.model.getMaxLength() || isNaN(offset)) {
-        Ext.Msg.alert("Invalid Column", `Please enter a numeric value between 1 and ${this.model.getMaxLength()}.`);
-        return;
+    this.addNode({
+      label: "Jump to a column",
+      callback: () => {
+        var offset = prompt("Column", "20");
+        if (offset <= 0 || offset > this.model.getMaxLength() || isNaN(offset)) {
+          Ext.Msg.alert("Invalid Column", `Please enter a numeric value between 1 and ${this.model.getMaxLength()}.`);
+          return;
+        }
+        return this.g.zoomer.setLeftOffset(offset - 1);
       }
-      return this.g.zoomer.setLeftOffset(offset - 1);
     });
 
     this.el.appendChild(this.buildDOM());

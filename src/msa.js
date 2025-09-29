@@ -70,6 +70,7 @@ const MSA = boneView.extend({
     // store config options for plugins
     this.g.conservationConfig = data.conserv;
     this.g.alignmentFilters = data.alignmentFilters;
+    this.g.comparisontype = 'strict'
 
     // debug mode
     if (window.location.hostname === "localhost") {

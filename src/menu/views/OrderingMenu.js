@@ -44,13 +44,15 @@ const OrderingMenu = MenuBuilder.extend({
       style.backgroundColor = "#5FA2DD";
       style.color = "#FFFFFF";
     }
-    return this.addNode(text, (() => {
-      if ((m.precode != null)) { m.precode(); }
-      this.model.comparator = m.comparator;
-      this.model.sort();
-      return this.setOrder(m.text);
-    }
-    ), {
+    return this.addNode({
+      label: text,
+      callback: (() => {
+        if ((m.precode != null)) { m.precode(); }
+        this.model.comparator = m.comparator;
+        this.model.sort();
+        return this.setOrder(m.text);
+      }
+      ),
       style: style,
       prefix: prefix,
     });
