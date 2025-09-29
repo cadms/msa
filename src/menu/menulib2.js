@@ -24,11 +24,7 @@ const MenuBuilder = view.extend({
     setName: function (name) {
         this.name = name;
     },
-    addNode: function (label, callback, opts = {}, prefix) {
-        const style = opts.style || { cursor: 'pointer' };
-        const children = opts.children || null;
-        const disabled = opts.disabled || false;
-
+    addNode: function ({ label, callback, style = { cursor: 'pointer' }, children = null, disabled = false, prefix, showSuffixOnHover = false, suffix }) {
         if (this._nodes == null) {
             this._nodes = [];
         }
@@ -38,6 +34,8 @@ const MenuBuilder = view.extend({
             callback,
             style,
             prefix,
+            suffix,
+            showSuffixOnHover,
             children,
             disabled,
         });
@@ -107,6 +105,10 @@ const MenuBuilder = view.extend({
             const li = document.createElement("li");
             li.className = node.disabled ? "dropdown-item disabled" : "dropdown-item";
 
+            if (node.showSuffixOnHover) {
+                li.classList.add("showOnHover");
+            }
+
             const text = document.createElement("span");;
             text.textContent = node.label;
             text.style.lineHeight = 1.2;
@@ -130,17 +132,17 @@ const MenuBuilder = view.extend({
                 });
             }
 
-            if (node.trailingIcon) {
+            if (node.suffix) {
                 const icon = document.createElement("span");
-                icon.className = `trailing-icon ${node.trailingIcon.className || ''}`;
-                icon.title = node.trailingIcon.title || "";
+                icon.className = `trailing-icon ${node.suffix.className || ''}`;
+                icon.title = node.suffix.title || "";
                 icon.style.marginLeft = "10px";
                 icon.style.cursor = "pointer";
 
-                if (typeof node.trailingIcon.onclick === 'function') {
+                if (typeof node.suffix.onclick === 'function') {
                     icon.addEventListener("click", (e) => {
                         e.stopPropagation();
-                        node.trailingIcon.onclick(e);
+                        node.suffix.onclick(e);
                     });
                 }
 

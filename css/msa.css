@@ -414,18 +414,22 @@
 .trailing-icon {
   float: right;
   margin-left: 10px;
+}
+
+.redOnHover:hover {
+  color: red !important;
+}
+
+.dropdown-item.showOnHover .trailing-icon {
   color: white;
   visibility: hidden;
 }
 
-.trailing-icon:hover {
-  color: red;
-}
-
-.dropdown-item:has(> span:hover) .trailing-icon,
-.dropdown-item:hover>.trailing-icon {
+.dropdown-item.showOnHover:has(> span:hover) .trailing-icon,
+.dropdown-item.showOnHover:hover>.trailing-icon {
   visibility: visible;
 }
+
 
 .smenubar .smenubar_alink {
   background: #3498db;

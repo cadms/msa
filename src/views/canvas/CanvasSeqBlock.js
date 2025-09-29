@@ -156,8 +156,6 @@ const View = boneView.extend({
         return ctx.fillRect(feature.attributes.xStart * rectWidth + data.xZero, y + data.yZero, rectWidth * len, rectHeight);
       });
 
-      console.log(`FONT: ${this.g.zoomer.get("residueFont")}`);
-
       // draw text
       ctx.fillStyle = "black";
       ctx.font = this.g.zoomer.get("residueFont") + "px mono";

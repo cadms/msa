@@ -1,7 +1,7 @@
 import MenuBuilder from "../menubuilder";
 import Exporter from "../../utils/exporter";
 
-import {fasta} from "bio.io";
+import { fasta } from "bio.io";
 
 const FastaExporter = fasta.write;
 
@@ -9,13 +9,13 @@ const ShareSym = "\u21AA";
 
 const ExportMenu = MenuBuilder.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.msa = data.msa;
     return this.el.style.display = "inline-block";
   },
 
-  render: function() {
+  render: function () {
     this.setName("Export");
 
     /*this.addNode("Share view (URL)" + ShareSym, () => {
@@ -39,8 +39,11 @@ const ExportMenu = MenuBuilder.extend({
       }
     }); */
 
-    this.addNode("Export alignment (FASTA)", () => {
-      return Exporter.saveAsFile(this.msa, "all.fasta");
+    this.addNode({
+      label: "Export alignment (FASTA)",
+      callback: () => {
+        return Exporter.saveAsFile(this.msa, "all.fasta");
+      }
     });
 
     /*this.addNode("Export alignment (URL)", () => {
@@ -49,16 +52,25 @@ const ExportMenu = MenuBuilder.extend({
       });
     });*/
 
-    this.addNode("Export selected sequences (FASTA)", () => {
-    	return Exporter.saveSelection(this.msa, "selection.fasta");
+    this.addNode({
+      label: "Export selected sequences (FASTA)",
+      callback: () => {
+        return Exporter.saveSelection(this.msa, "selection.fasta");
+      }
     });
 
-    this.addNode("Export MSA image (SVG)", () => {
-      this.g.trigger("export:svg")
+    this.addNode({
+      label: "Export MSA image (SVG)",
+      callback: () => {
+        this.g.trigger("export:svg")
+      }
     })
 
-    this.addNode("Export MSA image (PNG)", () => {
-      return Exporter.saveAsImg(this.msa, "biojs-msa.png");
+    this.addNode({
+      label: "Export MSA image (PNG)",
+      callback: () => {
+        return Exporter.saveAsImg(this.msa, "biojs-msa.png");
+      }
     });
 
     this.el.appendChild(this.buildDOM());

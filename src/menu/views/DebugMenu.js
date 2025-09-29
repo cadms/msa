@@ -10,22 +10,34 @@ const DebugMenu = MenuBuilder.extend({
   render: function () {
     this.setName("Debug");
 
-    this.addNode("Get the code", () => {
-      return window.open("https://github.com/wilzbach/msa");
+    this.addNode({
+      label: "Get the code",
+      callback: () => {
+        return window.open("https://github.com/wilzbach/msa");
+      }
     });
 
-    this.addNode("Toggle mouseover events", () => {
-      this.g.config.set("registerMouseHover", !this.g.config.get("registerMouseHover"));
-      return this.g.onAll(function () {
-        return console.log(arguments);
-      });
+    this.addNode({
+      label: "Toggle mouseover events",
+      callback: () => {
+        this.g.config.set("registerMouseHover", !this.g.config.get("registerMouseHover"));
+        return this.g.onAll(function () {
+          return console.log(arguments);
+        });
+      }
     });
 
-    this.addNode("Minimized width", () => {
-      return this.g.zoomer.set("alignmentWidth", 600);
+    this.addNode({
+      label: "Minimized width",
+      callback: () => {
+        return this.g.zoomer.set("alignmentWidth", 600);
+      }
     });
-    this.addNode("Minimized height", () => {
-      return this.g.zoomer.set("alignmentHeight", 120);
+    this.addNode({
+      label: "Minimized height",
+      callback: () => {
+        return this.g.zoomer.set("alignmentHeight", 120);
+      }
     });
 
     this.el.appendChild(this.buildDOM());
