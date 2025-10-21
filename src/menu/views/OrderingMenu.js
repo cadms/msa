@@ -6,7 +6,7 @@ const OrderingMenu = MenuBuilder.extend({
   initialize: function (data) {
     this.g = data.g;
     this.order = 0;
-    return this.el.style.display = "inline-block";
+    return;
   },
 
   setOrder: function (order) {

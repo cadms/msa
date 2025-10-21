@@ -33,14 +33,6 @@ const MenuView = boneView.extend({
     this.addView("40_vis", new VisMenu({ model: this.msa.seqs, g: this.msa.g }));
     this.addView("45_color", new ColorMenu({ model: this.msa.seqs, g: this.msa.g }));
 
-    // this.addView("55_import", new ImportMenu({ model: this.msa.seqs, g: this.msa.g, msa: this.msa }));
-    // this.addView("60_export", new ExportMenu({ model: this.msa.seqs, g: this.msa.g, msa: this.msa }));
-    // this.addView("60_extra", new ExtraMenu({ model: this.msa.seqs, g: this.msa.g, msa: this.msa }));
-
-    // this.addView("90_help", new HelpMenu({g:this.msa.g}));
-    // if (this.msa.g.config.get("debug")) {
-    //   return this.addView("95_debug", new DebugMenu({g:this.msa.g}));
-    // }
   },
 
   render: function () {
