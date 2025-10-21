@@ -97,6 +97,19 @@ const FilterMenu = MenuBuilder.extend({
       }
     });
 
+    this.addNode({
+      prefix: {},
+      label: "Jump to a column",
+      callback: () => {
+        var offset = prompt("Column", "20");
+        if (offset <= 0 || offset > this.model.getMaxLength() || isNaN(offset)) {
+          Ext.Msg.alert("Invalid Column", `Please enter a numeric value between 1 and ${this.model.getMaxLength()}.`);
+          return;
+        }
+        return this.g.zoomer.setLeftOffset(offset - 1);
+      }
+    });
+
     this.addDivider();
 
     this.addNode({

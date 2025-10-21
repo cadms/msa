@@ -193,6 +193,13 @@
   position: absolute;
 }
 
+.dropdown-menu .title {
+  color: rgba(60, 60, 67, .6);
+  font-size: 12px;
+  font-weight: 600;
+  padding-left: 0.75rem;
+}
+
 .dropdown-menu-left {
   right: auto;
   left: 0;

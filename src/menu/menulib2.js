@@ -51,6 +51,17 @@ const MenuBuilder = view.extend({
         });
     },
 
+    addTitle: function (label) {
+        if (this._nodes == null) {
+            this._nodes = [];
+        }
+
+        this._nodes.push({
+            type: 'title',
+            label,
+        });
+    },
+
     getNode: function (label) {
         let rNode;
         this._nodes.forEach(function (el) {
@@ -100,6 +111,13 @@ const MenuBuilder = view.extend({
                 const divider = document.createElement("div");
                 divider.className = "dropdown-divider";
                 return divider;
+            }
+
+            if (node.type === 'title') {
+                const title = document.createElement("div");
+                title.textContent = node.label;
+                title.className = 'title';
+                return title;
             }
 
             const li = document.createElement("li");
