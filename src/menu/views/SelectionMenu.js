@@ -11,6 +11,9 @@ const SelectionMenu = MenuBuilder.extend({
     this.setName("Selection");
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-pen',
+      },
       label: "Edit",
       callback: () => {
         const t = this
@@ -31,6 +34,7 @@ const SelectionMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Edit by seq position",
       callback: () => {
         const t = this
@@ -82,6 +86,7 @@ const SelectionMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Rename",
       callback: () => {
         const t = this
@@ -91,6 +96,7 @@ const SelectionMenu = MenuBuilder.extend({
         const seqLabel = t.model.at(row).get('name')
 
         Ext.Msg.show({
+          prefix: {},
           title: 'Rename Label',
           prompt: true,
           value: seqLabel,
@@ -107,6 +113,7 @@ const SelectionMenu = MenuBuilder.extend({
     this.addDivider();
 
     this.addNode({
+      prefix: {},
       label: 'Strict Comparison',
       callback: () => {
         this.g.comparisontype = 'strict';
@@ -124,11 +131,12 @@ const SelectionMenu = MenuBuilder.extend({
         this.render();
       },
       suffix: {
-        className: this.g.comparisontype == 'strict' && "fa fa-check"
+        className: this.g.comparisontype == 'strict' && "fal fa-check"
       },
     });
 
     this.addNode({
+      prefix: {},
       label: "Loose Comparison",
       callback: () => {
         this.g.comparisontype = 'loose';
@@ -147,13 +155,16 @@ const SelectionMenu = MenuBuilder.extend({
         this.render();
       },
       suffix: {
-        className: this.g.comparisontype == 'loose' && "fa fa-check"
+        className: this.g.comparisontype == 'loose' && "fal fa-check"
       },
     });
 
     this.addDivider();
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-trash',
+      },
       label: "Remove selected seq",
       callback: () => {
         const t = this
@@ -192,6 +203,9 @@ const SelectionMenu = MenuBuilder.extend({
     this.addDivider();
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-refresh',
+      },
       label: "Reset",
       callback: () => {
         const t = this

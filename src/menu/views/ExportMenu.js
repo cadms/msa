@@ -40,6 +40,9 @@ const ExportMenu = MenuBuilder.extend({
     }); */
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-download'
+      },
       label: "Export alignment (FASTA)",
       callback: () => {
         return Exporter.saveAsFile(this.msa, "all.fasta");
@@ -53,6 +56,7 @@ const ExportMenu = MenuBuilder.extend({
     });*/
 
     this.addNode({
+      prefix: {},
       label: "Export selected sequences (FASTA)",
       callback: () => {
         return Exporter.saveSelection(this.msa, "selection.fasta");
@@ -60,6 +64,7 @@ const ExportMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Export MSA image (SVG)",
       callback: () => {
         this.g.trigger("export:svg")
@@ -67,6 +72,7 @@ const ExportMenu = MenuBuilder.extend({
     })
 
     this.addNode({
+      prefix: {},
       label: "Export MSA image (PNG)",
       callback: () => {
         return Exporter.saveAsImg(this.msa, "biojs-msa.png");

@@ -225,6 +225,10 @@ const SelectionManager = Collection.extend({
         el.textContent = ''
         el.setAttribute("title", '')
       }
+      models.forEach(element => {
+        element.set('matchCount', null);
+
+      })
       return;
     };
     const selectionId = selectedRowSeqIds[0];
@@ -243,6 +247,7 @@ const SelectionManager = Collection.extend({
     models.forEach(element => {
       let matchCount = 0;
       const seq = element.get('seq');
+      console.log(element);
       for (let i = 0; i < seq.length; i++) {
         if (hiddenColumnIds.includes(i)) continue;
         if (this.g.comparisontype == 'strict' && (seq[i] === '-' || selectedSeq[i] === '-')) continue;
@@ -250,6 +255,7 @@ const SelectionManager = Collection.extend({
           matchCount++;
         }
       }
+      element.set('matchCount', matchCount);
       matches.push(matchCount);
     });
     const matchLabels = document.querySelectorAll(".biojs_msa_labels .match_label");

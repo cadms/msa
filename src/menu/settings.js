@@ -10,7 +10,7 @@ const MenuSettings = Model.extend({
         menuFontsize: "12px"
     },
     defaults: {
-        menuFontsize: "14px",
+        menuFontsize: "13px",
         menuItemFontsize: "14px",
         menuItemLineHeight: "14px",
         menuMarginLeft: "0",

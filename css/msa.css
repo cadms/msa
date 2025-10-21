@@ -152,25 +152,45 @@
 }
 
 .dropdown-menu {
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(30px);
+  background-color: rgba(242, 242, 242, 0.7);
+  backdrop-filter: blur(12px);
   background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1.4px solid white;
   border-radius: 12px;
-  box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   color: #1b1b1b;
-  display: none;
   float: left;
   font-size: 1rem;
   list-style: none;
   margin: 0.125rem 0 0;
   min-width: 10rem;
+
+  outline-color: rgba(150, 150, 156, 0.3);
+  outline-width: .7px;
+
   padding: 0.5rem 0.2rem;
   position: absolute;
   text-align: left;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: 9999;
+
+  opacity: 0;
+  transform: scale(0.25);
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.dropdown-menu.show {
+  animation:
+    bounce-in 300ms cubic-bezier(0.25, 0.8, 0.3, 1),
+    fade-in 200ms;
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+
+  display: block;
+  position: absolute;
 }
 
 .dropdown-menu-left {
@@ -329,17 +349,17 @@
   height: 0;
   margin: 0.5rem 0.75rem;
   overflow: hidden;
-  border-top: 1px solid #e6e6e6;
+  border-top: 1px solid rgba(60, 60, 67, .286);
 }
 
 .dropdown-item {
   align-items: center;
-  border-radius: 6px;
+  border-radius: 10px;
   display: flex;
-  padding: 0.2rem 0.75rem;
+  padding: 0.3rem 0.75rem;
   clear: both;
   font-weight: 400;
-  color: #1b1b1b;
+  color: black;
   text-align: inherit;
   white-space: nowrap;
   background-color: transparent;
@@ -390,10 +410,6 @@
   color: #999;
   pointer-events: none;
   background-color: transparent;
-}
-
-.dropdown-menu.show {
-  display: block;
 }
 
 .dropdown-header {
@@ -517,4 +533,28 @@
 
 .msa-btn:hover {
   background-color: #ddd;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.25);
+  }
+
+  70% {
+    transform: scale(1.01);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

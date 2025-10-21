@@ -29,6 +29,9 @@ const ImportMenu = MenuBuilder.extend({
 
     this.setName("Import");
     this.addNode({
+      prefix: {
+        className: 'fal fa-link'
+      },
       label: "URL",
       callback: (e) => {
         var url = prompt("Import files from URL" + "\nSupported file types: " + filetypes);
@@ -46,6 +49,9 @@ const ImportMenu = MenuBuilder.extend({
     //@g.zoomer.set zoomer
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-file'
+      },
       label: "From file " + filetypes,
       callback: () => {
         return uploader.click();
@@ -53,10 +59,16 @@ const ImportMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-hand-pointer'
+      },
       label: "Drag & Drop",
       callback: () => {
         return alert("Yep. Just drag & drop your file " + filetypes);
-      }
+      },
+      suffix: {
+        className: 'fal fa-chevron-right'
+      },
     });
 
     this.el.appendChild(this.buildDOM());
