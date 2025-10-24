@@ -24,23 +24,15 @@ const MenuView = boneView.extend({
 
     // add menu config to the global object
     this.msa.g.menuconfig = new MenuSettings(data.menu);
-
-    this.addView("10_ordering", new OrderingMenu({ model: this.msa.seqs, g: this.msa.g }));
+    this.addView("10_import", new ImportMenu({ model: this.msa.seqs, g: this.msa.g, msa: this.msa }));
+    this.addView("15_divider", new VerticalDivider());
+    this.addView("20_ordering", new OrderingMenu({ model: this.msa.seqs, g: this.msa.g }));
     this.addView("25_filter", new FilterMenu({ model: this.msa.seqs, g: this.msa.g }));
     this.addView("30_selection", new SelectionMenu({ model: this.msa.seqs, g: this.msa.g }));
     this.addView("35_divider", new VerticalDivider());
     this.addView("40_vis", new VisMenu({ model: this.msa.seqs, g: this.msa.g }));
     this.addView("45_color", new ColorMenu({ model: this.msa.seqs, g: this.msa.g }));
-    this.addView("50_divider", new VerticalDivider());
 
-    this.addView("55_import", new ImportMenu({ model: this.msa.seqs, g: this.msa.g, msa: this.msa }));
-    this.addView("60_export", new ExportMenu({ model: this.msa.seqs, g: this.msa.g, msa: this.msa }));
-    this.addView("65_extra", new ExtraMenu({ model: this.msa.seqs, g: this.msa.g, msa: this.msa }));
-
-    // this.addView("90_help", new HelpMenu({g:this.msa.g}));
-    // if (this.msa.g.config.get("debug")) {
-    //   return this.addView("95_debug", new DebugMenu({g:this.msa.g}));
-    // }
   },
 
   render: function () {

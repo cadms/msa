@@ -27,6 +27,9 @@ const VisMenu = MenuBuilder.extend({
     // other
     this.addNode({
       label: "Reset",
+      prefix: {
+        className: 'fal fa-refresh',
+      },
       callback: () => {
         this.g.vis.set("labels", true);
         // this.g.vis.set("sequences", true);
@@ -67,8 +70,18 @@ const VisMenu = MenuBuilder.extend({
       callback: (() => {
         return this.g.vis.set(visEl.id, !this.g.vis.get(visEl.id));
       }),
-      style: style
-
+      prefix: {
+        className: (() => {
+          switch (visEl.id) {
+            case 'conserv':
+              return 'fal fa-eye'
+            case 'markers':
+              return 'fal fa-eye-slash'
+            default:
+              return ''
+          }
+        })(),
+      },
     });
   },
 

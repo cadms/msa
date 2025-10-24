@@ -1,14 +1,12 @@
 import MenuBuilder from "../menubuilder";
 const dom = require("dom-helper");
-const arrowUp = "\u2191";
-const arrowDown = "\u2193";
 
 const OrderingMenu = MenuBuilder.extend({
 
   initialize: function (data) {
     this.g = data.g;
-    this.order = "ID";
-    return this.el.style.display = "inline-block";
+    this.order = 0;
+    return;
   },
 
   setOrder: function (order) {
@@ -24,6 +22,10 @@ const OrderingMenu = MenuBuilder.extend({
     var comps = this.getComparators();
     for (var i = 0, m; i < comps.length; i++) {
       m = comps[i];
+      if (i % 2 == 0 && i !== 0 && i !== comps.length) {
+        this.addDivider();
+
+      }
       this._addNode(m);
     }
 
@@ -36,11 +38,10 @@ const OrderingMenu = MenuBuilder.extend({
   },
 
   _addNode(m) {
-    var text = m.text;
-    var prefix = m.prefix;
+    var { text, prefix, order } = m;
 
     var style = {};
-    if (text === this.order) {
+    if (order === this.order) {
       style.backgroundColor = "#5FA2DD";
       style.color = "#FFFFFF";
     }
@@ -50,9 +51,8 @@ const OrderingMenu = MenuBuilder.extend({
         if ((m.precode != null)) { m.precode(); }
         this.model.comparator = m.comparator;
         this.model.sort();
-        return this.setOrder(m.text);
-      }
-      ),
+        return this.setOrder(order);
+      }),
       style: style,
       prefix: prefix,
     });
@@ -61,30 +61,65 @@ const OrderingMenu = MenuBuilder.extend({
   getComparators: function () {
     var models = [];
 
-    models.push({ text: "ID", comparator: "id", prefix: arrowUp });
+    models.push({
+      text: "ID",
+      order: 0,
+      comparator: "id",
+      prefix: {
+        className: "fal fa-arrow-up",
+      },
+    });
 
     models.push({
-      text: "ID " + arrowDown, comparator: function (a, b) {
-        // auto converts to string for localeCompare
+      text: "ID",
+      order: 1,
+      comparator: function (a, b) {
         return - ("" + a.get("id")).localeCompare("" + b.get("id"), [], { numeric: true });
-      }
+      },
+      prefix: {
+        className: "fal fa-arrow-down",
+      },
     });
 
 
-    models.push({ text: "Label " + arrowUp, comparator: "name" });
+    models.push({
+      text: "Label",
+      order: 2,
+      comparator: "name",
+      prefix: {
+        className: "fal fa-arrow-up",
+      },
+    });
 
     models.push({
-      text: "Label " + arrowDown, comparator: function (a, b) {
+      text: "Label",
+      order: 3,
+      comparator: function (a, b) {
         return - a.get("name").localeCompare(b.get("name"));
-      }
+      },
+      prefix: {
+        className: "fal fa-arrow-down",
+      },
     });
 
-    models.push({ text: "Seq " + arrowUp, comparator: "seq" });
+    models.push({
+      text: "Seq",
+      order: 4,
+      comparator: "seq",
+      prefix: {
+        className: "fal fa-arrow-up",
+      },
+    });
 
     models.push({
-      text: "Seq " + arrowDown, comparator: function (a, b) {
+      text: "Seq",
+      order: 5,
+      comparator: function (a, b) {
         return - a.get("seq").localeCompare(b.get("seq"));
-      }
+      },
+      prefix: {
+        className: "fal fa-arrow-down",
+      },
     });
 
     var setIdent = () => {
@@ -100,28 +135,63 @@ const OrderingMenu = MenuBuilder.extend({
     };
 
     models.push({
-      text: "Identity " + arrowUp, comparator: ((a, b) => {
+      text: "Identity",
+      order: 6,
+      comparator: ((a, b) => {
         var val = this.ident[a.id] - this.ident[b.id];
         console.log(this.ident[a.id], this.ident[b.id]);
         if (val > 0) { return 1; }
         if (val < 0) { return -1; }
         return 0;
       }
-      ), precode: setIdent
+      ), precode: setIdent,
+      prefix: {
+        className: "fal fa-arrow-up",
+      },
     });
 
     models.push({
-      text: "Identity " + arrowDown, comparator: ((a, b) => {
+      text: "Identity",
+      order: 7,
+      comparator: ((a, b) => {
         var val = this.ident[a.id] - this.ident[b.id];
         if (val > 0) { return -1; }
         if (val < 0) { return 1; }
         return 0;
       }
-      ), precode: setGaps
+      ),
+      prefix: {
+        className: "fal fa-arrow-down",
+      },
     });
 
     models.push({
-      text: "Consensus to top", comparator(seq) {
+      text: "Matches",
+      order: 8,
+      comparator: function (a, b) {
+        return - ("" + a.get("matchCount")).localeCompare("" + b.get("matchCount"), [], { numeric: true });
+      },
+      prefix: {
+        className: "fal fa-arrow-up",
+      },
+    });
+
+    models.push({
+      text: "Matches",
+      order: 9,
+      comparator: 'matchCount',
+      prefix: {
+        className: "fal fa-arrow-down",
+      },
+    });
+
+
+
+    models.push({
+      prefix: {},
+      text: "Consensus to top",
+      order: 10,
+      comparator(seq) {
         return !seq.get("ref");
       }
     });

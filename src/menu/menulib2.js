@@ -51,6 +51,17 @@ const MenuBuilder = view.extend({
         });
     },
 
+    addTitle: function (label) {
+        if (this._nodes == null) {
+            this._nodes = [];
+        }
+
+        this._nodes.push({
+            type: 'title',
+            label,
+        });
+    },
+
     getNode: function (label) {
         let rNode;
         this._nodes.forEach(function (el) {
@@ -102,11 +113,28 @@ const MenuBuilder = view.extend({
                 return divider;
             }
 
+            if (node.type === 'title') {
+                const title = document.createElement("div");
+                title.textContent = node.label;
+                title.className = 'title';
+                return title;
+            }
+
             const li = document.createElement("li");
             li.className = node.disabled ? "dropdown-item disabled" : "dropdown-item";
 
             if (node.showSuffixOnHover) {
                 li.classList.add("showOnHover");
+            }
+
+            if (node.prefix) {
+                const icon = document.createElement("span");
+                icon.style = `${node.prefix.style || 'font-size: 11px; width: 24px'}`;
+
+                icon.className = `${node.prefix.className || ''}`;
+                icon.title = node.prefix.title || "";
+                // icon.style.marginRight = "10px";
+                li.appendChild(icon);
             }
 
             const text = document.createElement("span");;
@@ -177,7 +205,6 @@ const MenuBuilder = view.extend({
         const menuUl = document.createElement("ul");
         menuUl.className = "dropdown-menu";
         menuUl.setAttribute('aria-labelledby', name.replace(/\s+/g, '') + "DropDown");
-        menuUl.style.display = "none";
 
         nodes.forEach(node => {
             const menuItem = createMenuItem.call(this, node);
@@ -202,7 +229,7 @@ const MenuBuilder = view.extend({
                 return window.setTimeout(() => {
                     return jbone(document.body).one("click", (e) => {
                         if (!e.target.closest('.trailing-icon')) {
-                            menuUl.style.display = "none";
+                            menuUl.classList.remove('show');
                             return;
                         }
                     });
@@ -219,9 +246,7 @@ const MenuBuilder = view.extend({
 
     _showMenu: function (e, menu, target) {
         let rect;
-        menu.style.display = "block";
-        menu.style.position = "absolute";
-        menu.className += " show";
+        menu.classList.add('show');
         rect = target.getBoundingClientRect();
     }
 });

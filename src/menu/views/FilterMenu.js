@@ -12,6 +12,9 @@ const FilterMenu = MenuBuilder.extend({
     this.setName("Filters");
     const hasSavedFilters = this.g.alignmentFilters && this.g.alignmentFilters.length !== 0;
     this.addNode({
+      prefix: {
+        className: 'fal fa-floppy-disk',
+      },
       label: "Save Filter as...",
       callback: () => {
         Ext.GlobalEvents.fireEvent('save_filter', this.g.columns.get('hidden'), () => {
@@ -23,6 +26,7 @@ const FilterMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: hasSavedFilters ? "Filters" : "Filters (none)",
       disabled: !hasSavedFilters,
       children: hasSavedFilters && this.g.alignmentFilters.map((filter, index) => {
@@ -58,6 +62,9 @@ const FilterMenu = MenuBuilder.extend({
     this.addDivider();
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-magnifying-glass'
+      },
       label: "Find Motif (supports RegEx)",
       callback: () => {
         let search = prompt("your search", "D");
@@ -66,6 +73,7 @@ const FilterMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Find by label",
       callback: () => {
         const prompt = Ext.Msg.show({
@@ -89,9 +97,25 @@ const FilterMenu = MenuBuilder.extend({
       }
     });
 
+    this.addNode({
+      prefix: {},
+      label: "Jump to a column",
+      callback: () => {
+        var offset = prompt("Column", "20");
+        if (offset <= 0 || offset > this.model.getMaxLength() || isNaN(offset)) {
+          Ext.Msg.alert("Invalid Column", `Please enter a numeric value between 1 and ${this.model.getMaxLength()}.`);
+          return;
+        }
+        return this.g.zoomer.setLeftOffset(offset - 1);
+      }
+    });
+
     this.addDivider();
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-eye-slash'
+      },
       label: "Hide columns by selection",
       callback: () => {
         const hiddenOld = this.g.columns.get("hidden");
@@ -103,6 +127,7 @@ const FilterMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Hide columns by gaps",
       callback: () => {
         let threshold = prompt("Enter threshold (in percent)", 20);
@@ -130,6 +155,7 @@ const FilterMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Hide columns by conserv threshold",
       callback: (e) => {
         let threshold = prompt("Enter threshold (in percent)", 20);
@@ -149,6 +175,7 @@ const FilterMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Hide seqs by selection",
       callback: () => {
         const hidden = this.g.selcol.where({ type: "row" });
@@ -164,6 +191,7 @@ const FilterMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Hide seqs by gaps",
       callback: () => {
         const threshold = prompt("Enter threshold (in percent)", 40);
@@ -178,6 +206,7 @@ const FilterMenu = MenuBuilder.extend({
     });
 
     this.addNode({
+      prefix: {},
       label: "Hide seqs by identity",
       callback: () => {
         let threshold = prompt("Enter threshold (in percent)", 20);
@@ -197,6 +226,9 @@ const FilterMenu = MenuBuilder.extend({
 
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-refresh',
+      },
       label: "Reset",
       callback: () => {
         this.g.columns.set("hidden", []);

@@ -1,6 +1,7 @@
 import MenuBuilder from "../menubuilder";
 import Seq from "../../model/Sequence";
 import Loader from "../../utils/loader";
+import { prefetch } from "webpack";
 const xhr = require("xhr");
 
 const ExtraMenu = MenuBuilder.extend({
@@ -65,6 +66,9 @@ const ExtraMenu = MenuBuilder.extend({
     //   cbs()
 
     this.addNode({
+      prefix: {
+        className: 'fal fa-magnifying-glass'
+      },
       label: "Jump to a column",
       callback: () => {
         var offset = prompt("Column", "20");
