@@ -32,8 +32,7 @@ const LabelView = view.extend({
   render: function () {
     dom.removeAllChilds(this.el);
 
-    this.el.style.width = `${this.g.zoomer.getLabelWidth()}px`;
-    this.el.setAttribute("class", "biojs_msa_labels");
+    this.el.setAttribute("class", "table_row");
 
     if (this.g.vis.get("labelCheckbox")) {
       var checkBox = document.createElement("input");
@@ -45,21 +44,20 @@ const LabelView = view.extend({
     }
 
     if (this.g.vis.get("labelId")) {
-      var id = document.createElement("span");
+      var id = document.createElement("div");
+      id.className = 'id';
       var val = this.model.get("id");
       if (!isNaN(val)) {
         val++;
       }
       id.textContent = val;
-      id.style.width = this.g.zoomer.get("labelIdLength") + "px";
-      id.style.display = "inline-block";
       this.el.appendChild(id);
       this.el.setAttribute("title", val)
     }
 
     if (this.g.vis.get("labelPartition")) {
-      var part = document.createElement("span");
-      part.style.width = this.g.zoomer.get("labelPartLength") + "px";
+      var part = document.createElement("div");
+      part.className = 'label';
       const textContent = this.model.get("partition");
       part.textContent = textContent;
       part.style.display = "inline-block";
@@ -69,42 +67,36 @@ const LabelView = view.extend({
     }
 
     if (this.g.vis.get("labelName")) {
-      var name = document.createElement("span");
+      var name = document.createElement("div");
       const textContent = this.model.get("name");
       name.textContent = textContent;
-      name.style.display = "inline-block";
+      name.className = 'label';
 
       if (this.model.get("ref") && this.g.config.get("hasRef")) {
         name.style.fontWeight = "bold";
       }
-      name.style.width = this.g.zoomer.get("labelNameLength") + "px";
       this.el.appendChild(name);
       this.el.setAttribute("title", textContent)
     }
 
     if (this.g.vis.get("numMatch")) {
-      var match = document.createElement("span");
+      var match = document.createElement("div");
       match.setAttribute("class", "match_label");
-      match.style.display = "inline-block";
-
 
       if (this.model.get("ref") && this.g.config.get("hasRef")) {
         match.style.fontWeight = "bold";
       }
-      match.style.width = "70px";
       this.el.appendChild(match);
     }
 
     if (this.g.vis.get("numDiff")) {
-      var diff = document.createElement("span");
+      var diff = document.createElement("div");
       diff.setAttribute("class", "diff_label");
-      diff.style.display = "inline-block";
 
 
       if (this.model.get("ref") && this.g.config.get("hasRef")) {
         diff.style.fontWeight = "bold";
       }
-      diff.style.width = "70px";
       this.el.appendChild(diff);
     }
 

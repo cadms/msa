@@ -7,14 +7,14 @@ const MarkerView = view.extend({
 
   className: "biojs_msa_marker",
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
-    this.listenTo(this.g.zoomer,"change:stepSize change:labelWidth change:columnWidth change:markerStepSize change:markerFontsize", this.render);
-    this.listenTo(this.g.vis,"change:labels change:metacell", this.render);
+    this.listenTo(this.g.zoomer, "change:stepSize change:labelWidth change:columnWidth change:markerStepSize change:markerFontsize", this.render);
+    this.listenTo(this.g.vis, "change:labels change:metacell", this.render);
     return this.manageEvents();
   },
 
-  render: function() {
+  render: function () {
     dom.removeAllChilds(this.el);
 
     const fontSize = this.g.zoomer.get("markerFontsize");
@@ -25,44 +25,45 @@ const MarkerView = view.extend({
     const hidden = this.g.columns.get("hidden");
 
     this.el.style.fontSize = fontSize;
+    // this.el.style.overflowX = "scroll";
+    this.el.style.display = "flex";
 
-    const container = document.createElement("span");
     const nMax = this.model.getMaxLength();
 
-    for( let n=0; n < nMax; n++ ) {
+    for (let n = 0; n < nMax; n++) {
       if (hidden.indexOf(n) >= 0) {
         let el = this.markerHidden(n, stepSize);
         if (!!el)
-            container.appendChild(el);
+          this.el.appendChild(el);
         n += stepSize;
         continue;
       }
-      let span = document.createElement("span");
+      let span = document.createElement("div");
       span.className = 'msa-col-header';
       span.style.width = cellWidth + "px";
-      span.style.display = "inline-block";
+      span.style.flexShrink = 0;
+      // span.style.display = "inline-block";
 
-      if ((n+1) % markerStepSize === 0) {
+      if ((n + 1) % markerStepSize === 0) {
         span.textContent = (n + 1);
-      } else if ((n+1) % stepSize === 0) {
+      } else if ((n + 1) % stepSize === 0) {
         span.textContent = ".";
       } else {
         span.textContent = " ";
       }
       span.rowPos = n;
-      container.appendChild(span);
+      this.el.appendChild(span);
     }
 
-    this.el.appendChild(container);
     return this;
   },
 
-  markerHidden: function(n,stepSize) {
+  markerHidden: function (n, stepSize) {
     const hidden = this.g.columns.get("hidden").slice(0);
 
     const min = Math.max(0, n - stepSize);
     let prevHidden = true;
-    for (let j = min; j <= n; j++ ) {
+    for (let j = min; j <= n; j++) {
       prevHidden &= hidden.indexOf(j) >= 0;
     }
 
@@ -83,10 +84,11 @@ const MarkerView = view.extend({
       }
     }
 
-    const s = svg.base({height: 10, width: 10});
+    const s = svg.base({ height: 10, width: 10 });
     s.style.position = "relative";
-    const triangle = svg.polygon({points: "0,0 5,5 10,0", style:
-      "fill:lime;stroke:purple;stroke-width:1"
+    const triangle = svg.polygon({
+      points: "0,0 5,5 10,0", style:
+        "fill:lime;stroke:purple;stroke-width:1"
     });
     jbone(triangle).on("click", (evt) => {
       hidden.splice(index, length);
@@ -97,7 +99,7 @@ const MarkerView = view.extend({
     return s;
   },
 
-  manageEvents: function() {
+  manageEvents: function () {
     const events = {};
     if (this.g.config.get("registerMouseClicks")) {
       events.click = "_onclick";
@@ -111,22 +113,22 @@ const MarkerView = view.extend({
     return this.listenTo(this.g.config, "change:registerMouseClick", this.manageEvents);
   },
 
-  _onclick: function(evt) {
+  _onclick: function (evt) {
     const rowPos = evt.target.rowPos;
     const stepSize = this.g.zoomer.get("stepSize");
-    return this.g.trigger("column:click", {rowPos: rowPos,stepSize: stepSize, evt:evt});
+    return this.g.trigger("column:click", { rowPos: rowPos, stepSize: stepSize, evt: evt });
   },
 
-  _onmousein: function(evt) {
+  _onmousein: function (evt) {
     const rowPos = this.g.zoomer.get("stepSize" * evt.rowPos);
     const stepSize = this.g.zoomer.get("stepSize");
-    return this.g.trigger("column:mousein", {rowPos: rowPos,stepSize: stepSize, evt:evt});
+    return this.g.trigger("column:mousein", { rowPos: rowPos, stepSize: stepSize, evt: evt });
   },
 
-  _onmouseout: function(evt) {
+  _onmouseout: function (evt) {
     const rowPos = this.g.zoomer.get("stepSize" * evt.rowPos);
     const stepSize = this.g.zoomer.get("stepSize");
-    return this.g.trigger("column:mouseout", {rowPos: rowPos,stepSize: stepSize, evt:evt});
+    return this.g.trigger("column:mouseout", { rowPos: rowPos, stepSize: stepSize, evt: evt });
   }
 });
 

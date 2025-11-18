@@ -8,6 +8,9 @@
 
 .biojs_msa_seqblock {
   cursor: move;
+  /* display: inline-block; */
+  /* overflow-x: hidden; */
+  /* overflow-y: hidden; */
 }
 
 .biojs_msa_layer {
@@ -15,73 +18,14 @@
   white-space: nowrap;
 }
 
-.biojs_msa_labels {
-  display: inline-block;
-  white-space: nowrap;
-  cursor: pointer;
-  vertical-align: middle;
-  overflow: hidden;
-  text-overflow: clip;
-  /*margin:auto; */
-  text-align: left;
-
-  text-overflow: ellipsis;
-}
-
-.biojs_msa_header {
-  white-space: nowrap;
-  text-align: left;
-}
-
-.biojs_msa_labelrow:before {
-  content: '';
-  display: inline-block;
-  width: 0;
-  height: 100%;
-  vertical-align: middle;
-}
-
-.biojs_msa_labelrow {
-  height: 100%;
-}
-
-.biojs_msa_labelrow:nth-child(odd) {
-  background-color: white;
-}
-
-.biojs_msa_labelrow:nth-child(even) {
-  background-color: #e6e6e6;
-  /* light gray */
-}
-
-.biojs_msa_labelblock::-webkit-scrollbar,
-.biojs_msa_rheader::-webkit-scrollbar {
-  /* FIX scrollbars on Mac */
-  -webkit-appearance: none;
-  width: 7px;
-  height: 7px;
-}
-
-.biojs_msa_labelblock::-webkit-scrollbar-thumb,
-.biojs_msa_rheader::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, .5);
-  box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-}
-
-.biojs_msa_labelblock {
-  display: inline-block;
-  vertical-align: top;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
 /* END BASIC */
 /* Marker */
 
 .biojs_msa_marker {
   color: #999;
+  display: flex;
   white-space: nowrap;
+  width: max-content;
 }
 
 .biojs_msa_marker .msa-col-header {

@@ -1,0 +1,12 @@
+.table_header {
+    display: flex;
+    font-size: 10px;
+    max-width: 420px;
+    flex-shrink: 0;
+    /* width: 100%; */
+}
+
+
+.table_header_wrapper {
+    display: flex;
+}

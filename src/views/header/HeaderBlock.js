@@ -30,7 +30,7 @@ const View = boneView.extend({
   render: function () {
     this.renderSubviews();
 
-    return this.el.className = "biojs_msa_header";
+    return this.el.className = "table_header_wrapper";
   }
 });
 export default View;

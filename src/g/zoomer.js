@@ -28,7 +28,7 @@ module.exports = Zoomer = Model.extend({
     alignmentHeight: 225,
     columnWidth: 25,
     rowHeight: 25,
-    autoResize: true, // only for the width
+    autoResize: false, // only for the width
 
     // labels
     labelIdLength: 20,

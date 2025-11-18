@@ -139,7 +139,6 @@ const OrderingMenu = MenuBuilder.extend({
       order: 6,
       comparator: ((a, b) => {
         var val = this.ident[a.id] - this.ident[b.id];
-        console.log(this.ident[a.id], this.ident[b.id]);
         if (val > 0) { return 1; }
         if (val < 0) { return -1; }
         return 0;

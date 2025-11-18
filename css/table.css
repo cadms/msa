@@ -1,0 +1,29 @@
+.id {
+    flex-shrink: 0;
+    width: 50px;
+}
+
+.comparison {
+    flex-shrink: 0;
+    width: 63px;
+}
+
+.match_label {
+    flex-shrink: 0;
+    width: 63px;
+}
+
+.diff_label {
+    flex-shrink: 0;
+    width: 63px;
+}
+
+.label {
+    min-width: 100px;
+    /* width: 100%; */
+}
+
+.meta {
+    flex-shrink: 0;
+    width: 63px;
+}

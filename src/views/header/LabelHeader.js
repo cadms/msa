@@ -4,7 +4,7 @@ const dom = require("dom-helper");
 
 const LabelHeader = view.extend({
 
-  className: "biojs_msa_headers",
+  className: "table_header",
 
   initialize: function (data) {
     this.g = data.g;
@@ -17,86 +17,68 @@ const LabelHeader = view.extend({
 
     dom.removeAllChilds(this.el);
 
-    var width = 0;
-    width += this.g.zoomer.getLeftBlockWidth();
-    this.el.style.width = width + "px";
-
     if (this.g.vis.get("labels")) {
-      this.el.appendChild(this.labelDOM());
+      this.labelDOM();
     }
 
     if (this.g.vis.get("metacell")) {
-      this.el.appendChild(this.metaDOM());
+      this.metaDOM()
     }
 
-    this.el.style.display = "inline-block";
-    this.el.style.fontSize = this.g.zoomer.get("markerFontsize");
     return this;
   },
 
   labelDOM: function () {
-    var labelHeader = k.mk("div");
-    labelHeader.style.width = this.g.zoomer.getLabelWidth();
-    labelHeader.style.display = "inline-block";
+
 
     if (this.g.vis.get("labelCheckbox")) {
-      labelHeader.appendChild(this.addEl(".", 10));
+      this.el.appendChild(this.addEl(".", 'id'));
     }
 
     if (this.g.vis.get("labelId")) {
-      labelHeader.appendChild(this.addEl("ID", this.g.zoomer.get("labelIdLength")));
+      this.el.appendChild(this.addEl("ID", 'id'));
     }
 
     if (this.g.vis.get("labelPartition")) {
-      labelHeader.appendChild(this.addEl("part", 15));
+      this.el.appendChild(this.addEl("part", 'label'));
     }
 
     if (this.g.vis.get("labelName")) {
-      var name = this.addEl("Label", this.g.zoomer.get("labelNameLength"));
-      labelHeader.appendChild(name);
+      var name = this.addEl("Label", 'label');
+      this.el.appendChild(name);
     }
 
     if (this.g.vis.get("numMatch")) {
-      labelHeader.appendChild(this.addEl("# Match", this.g.zoomer.get("labelComparisonLength")));
+      this.el.appendChild(this.addEl("# Match", 'comparison'));
     }
 
     if (this.g.vis.get("numDiff")) {
-      labelHeader.appendChild(this.addEl("# Diff", this.g.zoomer.get("labelComparisonLength")));
+      this.el.appendChild(this.addEl("# Diff", 'comparison'));
     }
 
-    return labelHeader;
+    return this.el;
   },
 
-  addEl: function (content, width) {
-    var id = document.createElement("span");
+  addEl: function (content, className) {
+    var id = document.createElement("div");
     id.textContent = content;
-    if ((typeof width !== "undefined" && width !== null)) {
-      id.style.width = width + "px";
+    if (className) {
+      id.className = className;
     }
-    id.style.display = "inline-block";
-    id.style.overflow = "hidden";
 
     return id;
   },
 
   metaDOM: function () {
-    var metaHeader = k.mk("div");
-    metaHeader.style.width = this.g.zoomer.getMetaWidth();
-    metaHeader.style.display = "inline-block";
-
     if (this.g.vis.get("metaGaps")) {
-      metaHeader.appendChild(this.addEl("Gaps", this.g.zoomer.get('metaGapWidth')));
-      // TODO:
-      // circle back to this
-      metaHeader.style.paddingLeft = `${this.g.zoomer.get('metaGapWidth') + 2}px`
+      this.el.appendChild(this.addEl("Gaps", "meta"));
     }
     if (this.g.vis.get("metaIdentity")) {
-      metaHeader.appendChild(this.addEl("Ident", this.g.zoomer.get('metaIdentWidth')));
+      this.el.appendChild(this.addEl("Ident", "meta"));
     }
-    // if @.g.vis.get "metaLinks"
-    //   metaHeader.appendChild @addEl("Links")
 
-    return metaHeader;
+
+    return this.el;
   }
 });
 export default LabelHeader;

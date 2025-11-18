@@ -1,6 +1,5 @@
 const boneView = require("backbone-childs");
 const mouse = require("mouse-pos");
-const C2S = require("canvas2svg");
 import { throttle } from "lodash";
 const jbone = require("jbone");
 
@@ -27,21 +26,17 @@ const View = boneView.extend({
 
     // el props
 
-    if (this.g.config.get("shouldRenderSeqBlockAsSvg") === true) {
-      this.el.classList.add("biojs_msa_seqblock")
-    } else {
-      this.el.style.display = "inline-block";
-      this.el.style.overflowX = "hidden";
-      this.el.style.overflowY = "hidden";
-      this.el.className = "biojs_msa_seqblock";
-    }
+
+    this.el.style.display = "inline-block";
+    this.el.style.overflowX = "hidden";
+    this.el.style.overflowY = "hidden";
+    this.el.className = "biojs_msa_seqblock";
 
 
-    if (this.g.config.get("shouldRenderSeqBlockAsSvg") === true) {
-      this.ctx = new C2S();
-    } else {
-      this.ctx = this.el.getContext('2d');
-    }
+
+
+    this.ctx = this.el.getContext('2d');
+
 
     this.cache = new CharCache(this.g);
 
@@ -129,11 +124,9 @@ const View = boneView.extend({
   },
 
   draw: function () {
-    if (!(this.g.config.get("shouldRenderSeqBlockAsSvg") === true)) {
-      // fastest way to clear the canvas
-      // http://jsperf.com/canvas-clear-speed/25
-      this.el.width = this.el.width;
-    }
+
+    this.el.width = this.el.width;
+
     // draw all the stuff
     if ((this.seqDrawer != null) && this.model.length > 0) {
       // char based
@@ -177,25 +170,13 @@ const View = boneView.extend({
   },
 
   getPlannedElWidth() {
-    return this.g.zoomer.getAlignmentWidth();
+    return 550;
   },
 
   render: function () {
-    if (this.g.config.get("shouldRenderSeqBlockAsSvg") === true) {
-      this.el.setAttributeNS("http://www.w3.org/2000/svg", 'height', this.getPlannedElHeight());
-      this.el.setAttributeNS("http://www.w3.org/2000/svg", 'width', this.getPlannedElWidth());
-      this.el.style.width = `${this.getPlannedElWidth()}px`;
-      this.el.style.height = `${this.getPlannedElHeight()}px`;
-    } else {
-      this.el.setAttribute('height', this.getPlannedElHeight() + "px");
-      this.el.setAttribute('width', this.getPlannedElWidth() + "px");
-    }
 
-    if (this.g.config.get("shouldRenderSeqBlockAsSvg") === true) {
-      const width = this.getPlannedElWidth();
-      const height = this.getPlannedElHeight();
-      this.ctx = new C2S(width, height)
-    }
+    this.el.setAttribute('height', this.getPlannedElHeight() + "px");
+    this.el.setAttribute('width', this.getPlannedElWidth() + "px");
 
 
     const zoomerScrollLeft = this.g.zoomer.get('_alignmentScrollLeft');
@@ -215,10 +196,6 @@ const View = boneView.extend({
       });
 
     this.throttledDraw();
-    if (this.g.config.get("shouldRenderSeqBlockAsSvg") === true) {
-      const shadowSvgElem = this.ctx.getSvg()
-      this.el.innerHTML = shadowSvgElem.innerHTML;
-    }
     return this;
   },
 

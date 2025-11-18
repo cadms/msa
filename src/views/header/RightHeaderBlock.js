@@ -7,20 +7,20 @@ import GapView from "./GapView";
 
 const View = boneView.extend({
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
     this.blockEvents = false;
 
-    this.listenTo(this.g.vis,"change:header", function() {
+    this.listenTo(this.g.vis, "change:header", function () {
       this.draw();
       return this.render();
     });
-    this.listenTo(this.g.vis,"change", this._setSpacer);
-    this.listenTo(this.g.zoomer,"change:alignmentWidth", this._setWidth);
+    this.listenTo(this.g.vis, "change", this._setSpacer);
+    // this.listenTo(this.g.zoomer, "change:alignmentWidth", this._setWidth);
     this.listenTo(this.g.zoomer, "change:_alignmentScrollLeft", this._adjustScrollingLeft);
 
     // TODO: duplicate rendering
-    this.listenTo(this.g.columns, "change:hidden", function() {
+    this.listenTo(this.g.columns, "change:hidden", function () {
       this.draw();
       return this.render();
     });
@@ -31,59 +31,59 @@ const View = boneView.extend({
   },
 
   events:
-    {"scroll": "_sendScrollEvent"},
+    { "scroll": "_sendScrollEvent" },
 
-  draw: function() {
+  draw: function () {
     this.removeViews();
 
     if (this.g.vis.get("conserv")) {
-      var conserv = new ConservationView({model: this.model, g: this.g});
+      var conserv = new ConservationView({ model: this.model, g: this.g });
       conserv.ordering = -20;
-      this.addView("conserv",conserv);
+      this.addView("conserv", conserv);
     }
 
     if (this.g.vis.get("markers")) {
-      var marker = new MarkerView({model: this.model, g: this.g});
+      var marker = new MarkerView({ model: this.model, g: this.g });
       marker.ordering = -10;
-      this.addView("marker",marker);
+      this.addView("marker", marker);
     }
 
     if (this.g.vis.get("seqlogo")) {
-      var seqlogo = new SeqLogoWrapper({model: this.model, g: this.g});
+      var seqlogo = new SeqLogoWrapper({ model: this.model, g: this.g });
       seqlogo.ordering = -30;
-      this.addView("seqlogo",seqlogo);
+      this.addView("seqlogo", seqlogo);
     }
 
     if (this.g.vis.get("gapHeader")) {
-      var gapview = new GapView({model: this.model, g: this.g});
+      var gapview = new GapView({ model: this.model, g: this.g });
       gapview.ordering = -25;
-      return this.addView("gapview",gapview);
+      return this.addView("gapview", gapview);
     }
   },
 
-  render: function() {
+  render: function () {
     this.renderSubviews();
 
     this._setSpacer();
 
     this.el.className = "biojs_msa_rheader";
-    this.el.style.overflowX = "auto";
+    // this.el.style.overflowX = "scroll";
     this.el.style.display = "inline-block";
     //@el.style.height = @g.zoomer.get("markerHeight") + "px"
-    this._setWidth();
+    // this._setWidth();
     this._adjustScrollingLeft();
     return this;
   },
 
   // scrollLeft triggers a reflow of the whole area (even only get)
-  _sendScrollEvent: function() {
+  _sendScrollEvent: function () {
     if (!this.blockEvents) {
-      this.g.zoomer.set("_alignmentScrollLeft", this.el.scrollLeft, {origin: "header"});
+      this.g.zoomer.set("_alignmentScrollLeft", this.el.scrollLeft, { origin: "header" });
     }
     return this.blockEvents = false;
   },
 
-  _adjustScrollingLeft: function(model,value,options) {
+  _adjustScrollingLeft: function (model, value, options) {
     if ((!(((typeof options !== "undefined" && options !== null) ? options.origin : undefined) != null)) || options.origin !== "header") {
       var scrollLeft = this.g.zoomer.get("_alignmentScrollLeft");
       this.blockEvents = true;
@@ -91,12 +91,12 @@ const View = boneView.extend({
     }
   },
 
-  _setSpacer: function() {
+  _setSpacer: function () {
     // spacer / padding element
     return this.el.style.marginLeft = this._getLabelWidth() + "px";
   },
 
-  _getLabelWidth: function() {
+  _getLabelWidth: function () {
     var paddingLeft = 0;
     if (!this.g.vis.get("leftHeader")) {
       paddingLeft += this.g.zoomer.getLeftBlockWidth();
@@ -104,7 +104,7 @@ const View = boneView.extend({
     return paddingLeft;
   },
 
-  _setWidth: function() {
+  _setWidth: function () {
     return this.el.style.width = this.g.zoomer.getAlignmentWidth() + "px";
   }
 });

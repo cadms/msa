@@ -211,8 +211,8 @@ const SelectionManager = Collection.extend({
       .map(m => m.get('seqId'));
 
     if (!selectedRowSeqIds.length) {
-      const matchLabels = document.querySelectorAll(".biojs_msa_labels .match_label");
-      const diffLabels = document.querySelectorAll(".biojs_msa_labels .diff_label");
+      const matchLabels = document.querySelectorAll(".table_row .match_label");
+      const diffLabels = document.querySelectorAll(".table_row .diff_label");
 
       for (let i = 0; i < matchLabels.length; i++) {
         const el = matchLabels[i];
@@ -247,7 +247,6 @@ const SelectionManager = Collection.extend({
     models.forEach(element => {
       let matchCount = 0;
       const seq = element.get('seq');
-      console.log(element);
       for (let i = 0; i < seq.length; i++) {
         if (hiddenColumnIds.includes(i)) continue;
         if (this.g.comparisontype == 'strict' && (seq[i] === '-' || selectedSeq[i] === '-')) continue;
@@ -258,8 +257,8 @@ const SelectionManager = Collection.extend({
       element.set('matchCount', matchCount);
       matches.push(matchCount);
     });
-    const matchLabels = document.querySelectorAll(".biojs_msa_labels .match_label");
-    const diffLabels = document.querySelectorAll(".biojs_msa_labels .diff_label");
+    const matchLabels = document.querySelectorAll(".table_row .match_label");
+    const diffLabels = document.querySelectorAll(".table_row .diff_label");
 
     for (let i = 0; i < matchLabels.length; i++) {
       const el = matchLabels[i];
@@ -327,7 +326,6 @@ const SelectionManager = Collection.extend({
       }
 
       if (lefts.length > 0 || rights.length > 0) {
-        console.log("removed el");
         return el.collection.remove(el);
       }
     });

@@ -36,7 +36,7 @@ const View = boneView.extend({
   render: function () {
     this.renderSubviews();
 
-    this.el.setAttribute("class", "biojs_msa_labelrow");
+    this.el.setAttribute("class", "table_row_wrapper");
     this.el.style.height = this.g.zoomer.get("rowHeight") * (this.model.attributes.height || 1) + "px";
 
     this.setSelection();

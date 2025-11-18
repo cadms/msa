@@ -1,14 +1,14 @@
 const BoneView = require("backbone-viewj");
-import {template} from "lodash";
+import { template } from "lodash";
 const $ = require("jbone");
 //const Slider = require("bootstrap-slider");
 
 const View = BoneView.extend({
 
 
-  initialize: function(data) {
+  initialize: function (data) {
     this.g = data.g;
-    this.listenTo(this.g.zoomer,"change:columnWidth", this.render);
+    this.listenTo(this.g.zoomer, "change:columnWidth", this.render);
     this.toggleClass = 'msa-hide';
     this.isVisible = true;
     return this;
@@ -48,7 +48,7 @@ const View = BoneView.extend({
 </div>\
 '),
 
-  render: function() {
+  render: function () {
     const sizeRange = this.model.getSizeRange();
     const stash = {
       value: this.model.getSize(),
@@ -56,8 +56,8 @@ const View = BoneView.extend({
       max: sizeRange[1],
       step: this.model.step || 1,
     };
-    this.$el.html( this.template(stash) );
-    if ( this.isVisible ) {
+    this.$el.html(this.template(stash));
+    if (this.isVisible) {
       this.show();
     }
     else {
@@ -66,32 +66,30 @@ const View = BoneView.extend({
     return this;
   },
 
-  updateSlider: function(e) {
+  updateSlider: function (e) {
     const target = e.target;
-    const size = parseInt( $(target).val() );
-    //console.log( "updateSize", size );
+    const size = parseInt($(target).val());
     this.model.setSize(size);
   },
 
-  clickButton: function(e) {
-    console.log( "clickButton", this, e );
+  clickButton: function (e) {
     const target = e.target;
     const action = $(target).data('action');
     const method = this.model[action];
     // bigger, smaller, reset
-    if( typeof this.model[action] === 'function' ) {
+    if (typeof this.model[action] === 'function') {
       this.model[action]();
     }
     return this;
   },
 
-  hide: function() {
+  hide: function () {
     this.isVisible = false;
     this.$el.find(".msa-scale-minimised").removeClass(this.toggleClass);
     this.$el.find(".msa-scale-maximised").addClass(this.toggleClass);
   },
 
-  show: function() {
+  show: function () {
     this.isVisible = false;
     this.$el.find(".msa-scale-minimised").addClass(this.toggleClass);
     this.$el.find(".msa-scale-maximised").removeClass(this.toggleClass);

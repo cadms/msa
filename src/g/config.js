@@ -14,8 +14,8 @@ module.exports = Config = Model.extend({
     alphabetSize: 20,
     dropImport: false,
     debug: false,
-    hasRef: false, // hasReference
+    hasRef: false,
     bootstrapMenu: false,
-    manualRendering: false // not recommended to turn on,
+    manualRendering: false,
   }
 });
