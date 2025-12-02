@@ -1,28 +1,26 @@
 const boneView = require("backbone-childs");
-import SeqBlock from "./canvas/CanvasSeqBlock";
-import LabelBlock from "./labels/LabelBlock";
-
+import SeqBlock from "./canvas/NewSeqBlock";
+import RightLabelHeader from "./header/RightHeaderBlock"
 const View = boneView.extend({
 
   initialize: function (data) {
     this.g = data.g;
 
     if (true) {
-      var labelblock = new LabelBlock({ model: this.model, g: this.g });
-      labelblock.ordering = -1;
-      this.addView("labelblock", labelblock);
+      var rHeader = new RightLabelHeader({ model: this.model, g: this.g });
+      rHeader.ordering = -1;
+      this.addView("rHeader", rHeader);
     }
 
     if (this.g.vis.get("sequences")) {
-      var seqblock;
 
-      seqblock = new SeqBlock({
+      const seqblock = new SeqBlock({
         model: this.model,
         g: this.g,
-        el: document.createElement("canvas"),
+        el: document.createElement("div"),
       });
 
-      seqblock.ordering = 0;
+
       this.addView("seqblock", seqblock);
     }
 
@@ -35,10 +33,11 @@ const View = boneView.extend({
   render: function () {
     this.renderSubviews();
     this.el.className = "biojs_msa_albody";
-    // this.el.style.overflowY = "scroll";
     this.el.style.whiteSpace = "nowrap";
     this.el.style.display = "flex";
-    // this.el.style.gap = '10px';
+    this.el.style.flexDirection = "column";
+    this.el.style.height = 'fit-content'
+    this.el.style.overflowX = 'scroll';
     this.adjustHeight();
     this.adjustWidth();
     return this;

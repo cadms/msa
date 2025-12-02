@@ -8,44 +8,47 @@ const SelectionMenu = MenuBuilder.extend({
   },
 
   render() {
-    this.setName("Selection");
+    // this.setName((() => {
+    //   const icon = document.createElement("i");
+    //   icon.className = "fal fa-pen";
+    //   return icon;
+    // })());
+    this.setName("Edit");
 
     this.addNode({
       prefix: {
         className: 'fal fa-pen',
       },
-      label: "Edit",
+      label: "Edit entire sequence",
       callback: () => {
         const t = this
         const selcol = t.g.selcol
         const firstSel = selcol.models[0]
         const row = firstSel.get('seqId')
-        const col = firstSel.get('xStart')
         const seq = t.model.at(row).get('seq')
-        const char = seq.substr(col, 1)
-        const type = firstSel.get('type')
+        Ext.GlobalEvents.fireEvent('msa_edit', seq, row)
 
-        if (type === 'pos') {
-          Ext.GlobalEvents.fireEvent('msa_edit', char, row, col)
-        } else {
-          Ext.GlobalEvents.fireEvent('msa_edit', seq, row)
-        }
       }
     });
 
     this.addNode({
       prefix: {},
-      label: "Edit by seq position",
+      label: "Edit by character selection",
       callback: () => {
         const t = this
         const selcol = t.g.selcol
+
         const firstSel = selcol.models[0]
         const row = firstSel.get('seqId')
         let seq = t.model.at(row).get('seq')
         const selRange = selcol.models.map(m => m.get('xStart'))
-        const startCol = Math.min(...selRange)
-        const endCol = Math.max(...selRange)
+
+        const startCol = firstSel.get('xStart')
+        const endCol = firstSel.get('xEnd')
         const oldVal = seq.substring(startCol, endCol + 1) // selected chars
+        console.log('selRange: ', selRange);
+        console.log('startCol: ', startCol);
+        console.log('endCol: ', endCol);
 
         Ext.Msg.show({
           title: 'Edit',
@@ -54,7 +57,7 @@ const SelectionMenu = MenuBuilder.extend({
           buttons: Ext.Msg.OKCANCEL,
           scope: this,
           fn: function (btnText, val) {
-
+            console.log(val);
             // check if the user has clicked on positions that are not in the same seq/row
             function checkSeqId(arr) {
               const uniqueSeqIds = new Set()
@@ -87,7 +90,7 @@ const SelectionMenu = MenuBuilder.extend({
 
     this.addNode({
       prefix: {},
-      label: "Rename",
+      label: "Edit label",
       callback: () => {
         const t = this
         const selcol = t.g.selcol
@@ -97,7 +100,7 @@ const SelectionMenu = MenuBuilder.extend({
 
         Ext.Msg.show({
           prefix: {},
-          title: 'Rename Label',
+          title: 'Edit Label',
           prompt: true,
           value: seqLabel,
           buttons: Ext.Msg.OKCANCEL,
@@ -165,7 +168,7 @@ const SelectionMenu = MenuBuilder.extend({
       prefix: {
         className: 'fal fa-trash',
       },
-      label: "Remove selected seq",
+      label: "Remove sequence",
       callback: () => {
         const t = this
         const selcol = t.g.selcol
@@ -178,28 +181,6 @@ const SelectionMenu = MenuBuilder.extend({
       }
     });
 
-
-
-    // this.addNode("Invert columns", () => {
-    //   return this.g.selcol.invertCol(((() => {
-    //     const result = [];
-    //     const end = this.model.getMaxLength();
-    //     let i = 0;
-    //     if (0 <= end) {
-    //       while (i <= end) {
-    //         result.push(i++);
-    //       }
-    //     } else {
-    //       while (i >= end) {
-    //         result.push(i--);
-    //       }
-    //     }
-    //     return result;
-    //   })()));
-    // });
-    // this.addNode("Invert rows", () => {
-    //   return this.g.selcol.invertRow(this.model.pluck("id"));
-    // });
     this.addDivider();
 
     this.addNode({

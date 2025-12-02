@@ -1,9 +1,11 @@
 /* BASIC */
 
 .biojs_msa_stage {
+  align-items: end;
   cursor: default;
   line-height: normal;
   font-family: Helvetica;
+  display: flex;
 }
 
 .biojs_msa_seqblock {
@@ -31,11 +33,15 @@
 .biojs_msa_marker .msa-col-header {
   cursor: pointer;
   cursor: pointer;
+  flex-shrink: 0;
   text-align: center;
+  width: 25px;
 }
 
 .biojs_msa_marker .msa-col-header:hover {
   color: #f00;
+  cursor: pointer;
+  font-weight: 900;
 }
 
 /* END Marker */
@@ -61,12 +67,17 @@
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-.btn-secondary {
+.btn.secondary {
   color: #000;
   background-color: #F6F6F6;
   border-color: #E4E4E4;
   border-radius: 20px;
   padding: 3px 14px !important;
+}
+
+.btn.circle {
+  height: 27.5px;
+  width: 27.5px;
 }
 
 .dropup,

@@ -67,7 +67,7 @@ const View = boneView.extend({
     this._setSpacer();
 
     this.el.className = "biojs_msa_rheader";
-    // this.el.style.overflowX = "scroll";
+    // this.el.style.overflowX = "hidden";
     this.el.style.display = "inline-block";
     //@el.style.height = @g.zoomer.get("markerHeight") + "px"
     // this._setWidth();

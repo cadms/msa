@@ -16,14 +16,14 @@ const Feature = Model.extend({
     row: 0
   },
 
-  initialize: function(obj) {
+  initialize: function (obj) {
     if ((obj.start != null)) {
       // gff counts from 1 where MSA starts at 0
       // This fix that misalignment
-      this.set("xStart", (obj.start-1));
+      this.set("xStart", (obj.start - 1));
     }
     if ((obj.end != null)) {
-      this.set("xEnd", (obj.end-1));
+      this.set("xEnd", (obj.end - 1));
     }
     // name has a predefined meaning
     if ((obj.attributes != null)) {
@@ -47,14 +47,14 @@ const Feature = Model.extend({
     }
   },
 
-  validate: function() {
+  validate: function () {
     if (isNaN(this.attributes.xStart || isNaN(this.attributes.xEnd))) {
       return "features need integer start and end.";
     }
   },
 
-  contains: function(index) {
-    return  this.attributes.xStart <= index && index <= this.attributes.xEnd;
+  contains: function (index) {
+    return this.attributes.xStart <= index && index <= this.attributes.xEnd;
   }
 });
 export default Feature;

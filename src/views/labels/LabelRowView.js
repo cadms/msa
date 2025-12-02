@@ -5,6 +5,7 @@ import MetaView from "./MetaView";
 const View = boneView.extend({
 
   initialize: function (data) {
+    console.log("TEST");
     this.g = data.g;
     this.draw();
 
@@ -45,14 +46,19 @@ const View = boneView.extend({
 
   setSelection: function () {
     var sel = this.g.selcol.getSelForRow(this.model.id);
-    if (sel.length > 0) {
+    // Skip all selections where sel.type === 'column'
+    var filtered = sel.filter(function (s) {
+      return s.get('type') !== 'column';
+    });
+
+    if (filtered.length > 0) {
       this.el.style.fontWeight = "900";
       this.el.style.color = "red";
-
     } else {
       this.el.style.fontWeight = "normal";
       this.el.style.color = "black";
     }
   }
+
 });
 export default View;

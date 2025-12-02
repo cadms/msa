@@ -13,8 +13,8 @@ const SelectionManager = Collection.extend({
 
       this.listenTo(this.g, "residue:click", function (e) {
         return this._handleEl(e.evt, new possel({
-          xStart: e.rowPos,
-          xEnd: e.rowPos,
+          xStart: e.startPos,
+          xEnd: e.endPos,
           seqId: e.seqId
         }));
       });

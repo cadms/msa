@@ -1,5 +1,6 @@
 const boneView = require("backbone-childs");
 const mouse = require("mouse-pos");
+const C2S = require("canvas2svg");
 import { throttle } from "lodash";
 const jbone = require("jbone");
 
@@ -170,13 +171,15 @@ const View = boneView.extend({
   },
 
   getPlannedElWidth() {
-    return 550;
+    return this.g.zoomer.getAlignmentWidth();
   },
 
   render: function () {
 
     this.el.setAttribute('height', this.getPlannedElHeight() + "px");
     this.el.setAttribute('width', this.getPlannedElWidth() + "px");
+
+
 
 
     const zoomerScrollLeft = this.g.zoomer.get('_alignmentScrollLeft');

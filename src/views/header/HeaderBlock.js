@@ -1,6 +1,7 @@
 const boneView = require("backbone-childs");
 import LabelHeader from "./LabelHeader";
-import RightLabelHeader from "./RightHeaderBlock";
+// import RightLabelHeader from "./RightHeaderBlock";
+import LabelBlock from "../labels/LabelBlock";
 
 const View = boneView.extend({
 
@@ -22,9 +23,10 @@ const View = boneView.extend({
       this.addView("lHeader", lHeader);
     }
 
-    var rHeader = new RightLabelHeader({ model: this.model, g: this.g });
-    rHeader.ordering = 0;
-    return this.addView("rHeader", rHeader);
+    var labelBlock = new LabelBlock({ model: this.model, g: this.g });
+
+    labelBlock.ordering = 0;
+    return this.addView("labelblock", labelBlock);
   },
 
   render: function () {

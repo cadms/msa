@@ -9,10 +9,12 @@ const View = boneView.extend({
     this.listenTo(this.g.zoomer, "change:_alignmentScrollTop", this._adjustScrollingTop);
     this.g.vis.once('change:loaded', this._adjustScrollingTop, this);
 
-    this.listenTo(this.g.zoomer, "change:alignmentHeight", this._setHeight);
+    // this.listenTo(this.g.zoomer, "change:alignmentHeight", this._setHeight);
     this.listenTo(this.model, "change:reference", this.draw);
 
     return this.listenTo(this.model, "reset add remove", () => {
+      console.log('labelBlock.js')
+
       this.draw();
       return this.render();
     });
@@ -47,7 +49,7 @@ const View = boneView.extend({
     this.el.className = "table_body_wrapper";
     this.el.style.fontSize = `${this.g.zoomer.get('labelFontsize')}px`;
     this.el.style.lineHeight = `${this.g.zoomer.get("labelLineHeight")}`;
-    this._setHeight();
+    // this._setHeight();
 
     setTimeout(() => {
       this.g.selcol.renderComparisonColumns();

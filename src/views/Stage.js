@@ -49,7 +49,6 @@ const View = boneView.extend({
     if (true) {
       var headerblock = new HeaderBlock({ model: this.model, g: this.g });
       headerblock.ordering = this.g.visorder.get('headerBox');
-
       this.addView("headerBox", headerblock);
     }
 

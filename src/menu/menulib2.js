@@ -18,7 +18,6 @@ const MenuBuilder = view.extend({
             fc = this.el.firstChild;
         }
 
-        // replace child
         this.el.appendChild(this.buildDOM());
     },
     setName: function (name) {
@@ -204,7 +203,6 @@ const MenuBuilder = view.extend({
 
         const menuUl = document.createElement("ul");
         menuUl.className = "dropdown-menu";
-        menuUl.setAttribute('aria-labelledby', name.replace(/\s+/g, '') + "DropDown");
 
         nodes.forEach(node => {
             const menuItem = createMenuItem.call(this, node);
@@ -215,11 +213,11 @@ const MenuBuilder = view.extend({
 
         // Main button
         const displayedButton = document.createElement("a");
-        displayedButton.textContent = name;
-        displayedButton.className = "btn btn-secondary dropdown-toggle";
+        displayedButton.innerHTML = "";
+        displayedButton.append(name);
+        displayedButton.className = "btn secondary dropdown-toggle";
         displayedButton.setAttribute('role', 'button');
         displayedButton.setAttribute('data-toggle', 'dropdown');
-        displayedButton.id = name.replace(/\s+/g, '') + "DropDown";
 
         this.trigger("new:button", displayedButton);
 
