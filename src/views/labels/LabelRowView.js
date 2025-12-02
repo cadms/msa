@@ -5,7 +5,6 @@ import MetaView from "./MetaView";
 const View = boneView.extend({
 
   initialize: function (data) {
-    console.log("TEST");
     this.g = data.g;
     this.draw();
 

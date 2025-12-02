@@ -16,17 +16,29 @@ const View = boneView.extend({
         this.highlightBox.style.position = "absolute";
         this.highlightBox.style.border = "2px solid red";
         this.highlightBox.style.borderRadius = "5px";
-        this.highlightBox.style.pointerEvents = "none"; // allows clicks through the box
+        this.highlightBox.style.pointerEvents = "none";
         this.highlightBox.style.transition = "all 0.2s ease";
         this.el.appendChild(this.highlightBox);
+        this.color = this.g.colorscheme.getSelectedScheme();
+        if (this.color.type == 'dyn') {
+            this.color = null;
+        }
         this.listenTo(this.g.columns, "change:hidden", this.render);
+        this.listenTo(this.g.colorscheme, "change:scheme", function () {
+            this.color = this.g.colorscheme.getSelectedScheme();
+            console.log(this.color);
+
+            if (this.color.type == 'dyn') {
+                this.color = null;
+            }
+            return this.render();
+        });
 
         return this.listenTo(this.g.selcol, "reset", this.clearHere);
 
     },
 
     render: function () {
-        console.log('Render')
         dom.removeAllChilds(this.el);
 
 
@@ -46,12 +58,16 @@ const View = boneView.extend({
 
             const sequence = sequenceObject.attributes.seq.split("");
             sequence.forEach((seqChar, characterIndex) => {
-                console.log(hiddenColumnIds.includes(characterIndex));
-
                 var char = document.createElement('div');
                 char.className = 'sequence_cell';
                 char.textContent = seqChar;
                 char.attributes.seqId = 0;
+
+                let color = '';
+                if (this.color) {
+                    color = this.color.map[seqChar.toUpperCase()];
+                }
+                char.style.backgroundColor = color;
                 // Mouse down starts the selection
                 char.addEventListener("mousedown", e => {
                     this.highlightBox.style.width = "0";
